@@ -1,12 +1,15 @@
 Package: staphopia
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Functions for the Staphopia API
 Version: 0.1.0
 Author: Robert Petit
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Maintainer: Robert Petit <robbie.petit@gmail.com>
+Description: More coming
+License: To Be Determined
 LazyData: TRUE
 Imports:
+    data.table,
     httr,
+    ggplot2,
     jsonlite
+RoxygenNote: 5.0.1
