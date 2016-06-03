@@ -4,17 +4,23 @@
 \alias{submit_post_request}
 \title{submit_post_request}
 \usage{
-submit_post_request(request, data)
+submit_post_request(request, data, chunk_size = 10)
 }
 \arguments{
-\item{request}{}
+\item{request}{An API endpoint
+'}
+
+\item{data}{A vector of data to be POSTED
+'}
+
+\item{chunk_size}{Optional parameter to determine size of chunks}
 }
 \value{
 Parsed JSON response.
 }
 \description{
-Prepare a POST query for submission to Staphopia's API. Paginated responses
-are aggregated and submitted as a single response. This function should
-not be directly called by the user.
+Prepare a POST query for submission to Staphopia's API. By default post
+requests will be split into a number of smaller requests. This is hopefully
+avoid timeouts.
 }
 

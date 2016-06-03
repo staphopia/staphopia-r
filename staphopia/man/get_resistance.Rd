@@ -2,7 +2,7 @@
 % Please edit documentation in R/resistance.R
 \name{get_resistance}
 \alias{get_resistance}
-\title{get_tags}
+\title{get_resistance}
 \usage{
 get_resistance(antibiotic = NULL, test = NULL)
 }
@@ -19,8 +19,8 @@ Retrieve all resistances in the database. Can be filtered based on
 antibiotic and test.
 }
 \examples{
-get_resistances()
-get_resistances(anitbiotic="Vancomycin")
-get_resistances(anitbiotic="Vancomycin", test="Etest")
+get_resistance()
+get_resistance(anitbiotic="Vancomycin")
+get_resistance(anitbiotic="Vancomycin", test="Etest")
 }
 

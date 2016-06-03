@@ -97,21 +97,33 @@ post_request <- function(url, data) {
 
 #' submit_post_request
 #'
-#' Prepare a POST query for submission to Staphopia's API. Paginated responses
-#' are aggregated and submitted as a single response. This function should
-#' not be directly called by the user.
+#' Prepare a POST query for submission to Staphopia's API. By default post
+#' requests will be split into a number of smaller requests. This is hopefully
+#' avoid timeouts.
 #'
-#' @param request
+#' @param request An API endpoint
+#''
+#' @param data A vector of data to be POSTED
+#''
+#' @param chunk_size Optional parameter to determine size of chunks
 #'
 #' @return Parsed JSON response.
-submit_post_request <- function(request, data) {
+submit_post_request <- function(request, data, chunk_size=10) {
     url <- build_url(request)
-    json_data <- post_request(url, data)
-    if (is.not.null(json_data$`next`)) {
-        pages <- submit_paginated_request(json_data$`next`)
-        data <- c(list(json_data$results), pages)
-        json_data <- list(count=json_data$count,
-                          results=data.table::rbindlist(data))
+    count <- 0
+    results <- c()
+    for (chunk in split_vector_into_chunks(data, chunk_size)) {
+        json_data <- post_request(url, list(ids=chunk))
+        count <- count + json_data$count
+        print(count)
+        results <- append(results, list(json_data$results))
+        Sys.sleep(0.20)
     }
-    return(json_data)
+
+    results <- data.table::rbindlist(results)
+    if (count == nrow(results)) {
+        return(results)
+    } else {
+        return("Error!")
+    }
 }

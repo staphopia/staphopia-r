@@ -1,4 +1,4 @@
-#' get_tags
+#' get_resistance
 #'
 #' Retrieve all resistances in the database. Can be filtered based on
 #' antibiotic and test.
@@ -11,20 +11,18 @@
 #' @export
 #'
 #' @examples
-#' get_resistances()
-#' get_resistances(anitbiotic="Vancomycin")
-#' get_resistances(anitbiotic="Vancomycin", test="Etest")
+#' get_resistance()
+#' get_resistance(anitbiotic="Vancomycin")
+#' get_resistance(anitbiotic="Vancomycin", test="Etest")
 get_resistance <- function(antibiotic=NULL, test=NULL) {
-    request <- NULL
+    request <- '/resistance/'
     if (is.not.null(antibiotic)) {
         if (is.not.null(test)) {
-            request <- paste0('/resistance/?antibiotic=', antibiotic,
+            request <- paste0(request, '?antibiotic=', antibiotic,
                               '&test=', test)
         } else {
-            request <- paste0('/resistance/?antibiotic=', antibiotic)
+            request <- paste0(request, '/?antibiotic=', antibiotic)
         }
-    } else {
-        request <- '/resistance/'
     }
     return(submit_get_request(request))
 }
@@ -42,29 +40,10 @@ get_resistance <- function(antibiotic=NULL, test=NULL) {
 #' get_resistance_by_samples(c(500,501,502))
 #' get_resistance_by_samples(c(500,501,502), resistance_id = 1)
 get_resistance_by_samples <- function(sample_ids, resistance_id=NULL) {
-    count <- 0
-    hits <- c()
-    sample_chunk <- split_vector_into_chunks(sample_ids, 100)
-    for (chunk in sample_chunk) {
-
-        request <- NULL
-        if (is.not.null(resistance_id)) {
-            request <- paste0('/resistance/bulk_by_sample/?resistance_id=',
-                              resistance_id)
-
-        } else {
-            request <- '/resistance/bulk_by_sample/'
-        }
-        json_data <- submit_post_request(request, list(ids=chunk))
-        count <- count + json_data$count
-        hits <- append(hits, list(json_data$results))
+    request <- '/resistance/bulk_by_sample/'
+    if (is.not.null(resistance_id)) {
+        request <- paste0(request, '?resistance_id=', resistance_id)
     }
 
-    results <- data.table::rbindlist(hits)
-    if (count == nrow(results)) {
-        return(results)
-    } else {
-        return("Error!")
-    }
-
+    return(submit_post_request(request, sample_ids, chunk_size=50))
 }

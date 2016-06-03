@@ -10,23 +10,8 @@
 #' @examples
 #' get_snps_by_samples(c(500,501,502))
 get_snps_by_samples <- function(sample_ids) {
-    count <- 0
-    snps <- c()
-    sample_chunk <- split_vector_into_chunks(sample_ids, 5)
-    for (chunk in sample_chunk) {
-        request <- '/variant/snp/bulk_by_sample/'
-        json_data <- submit_post_request(request, list(ids=chunk))
-        count <- count + json_data$count
-        snps <- append(snps, list(json_data$results))
-    }
-
-    results <- data.table::rbindlist(snps)
-    if (count == nrow(results)) {
-        return(results)
-    } else {
-        return("Error!")
-    }
-
+    request <- '/variant/snp/bulk_by_sample/'
+    return(submit_post_request(request, sample_ids))
 }
 
 #' get_snps_in_bulk
@@ -43,22 +28,7 @@ get_snps_by_samples <- function(sample_ids) {
 get_snps_in_bulk <- function(snp_ids) {
     unique_snps <- unique(snp_ids)
     request <- '/variant/snp/bulk/'
-    count <- 0
-    snps <- c()
-    snp_chunk <- split_vector_into_chunks(unique_snps, 499)
-    for (chunk in snp_chunk) {
-        json_data <- submit_post_request(request, list(ids=chunk))
-        count <- count + json_data$count
-        snps <- append(snps, list(json_data$results))
-    }
-
-    results <- data.table::rbindlist(snps)
-    if (count == nrow(results)) {
-        return(results)
-    } else {
-        return("Error!")
-    }
-
+    return(submit_post_request(request, unique_snps, chunk_size=500))
 }
 
 #' create_snp_matrix
