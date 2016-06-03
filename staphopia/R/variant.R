@@ -42,11 +42,11 @@ get_snps_by_samples <- function(sample_ids) {
 #' get_snps_in_bulk(c(5000,5001,5002))
 get_snps_in_bulk <- function(snp_ids) {
     unique_snps <- unique(snp_ids)
+    request <- '/variant/snp/bulk/'
     count <- 0
     snps <- c()
-    snp_chunk <- split_vector_into_chunks(unique_snps, 500)
+    snp_chunk <- split_vector_into_chunks(unique_snps, 499)
     for (chunk in snp_chunk) {
-        request <- '/variant/snp/bulk/'
         json_data <- submit_post_request(request, list(ids=chunk))
         count <- count + json_data$count
         snps <- append(snps, list(json_data$results))

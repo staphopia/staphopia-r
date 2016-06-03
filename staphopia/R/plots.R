@@ -26,7 +26,7 @@ manhattan_plot <- function(df, genome_size=2814816, alpha=0.05,
             labels = round(seq(0, genome_size, by = 250000)/1000000,1)) +
         geom_hline(yintercept=alpha, linetype="dashed") +
         theme_bw() +
-        theme(text = element_text(family="Arial", size=20))
+        theme(text = element_text(size=20))
 
     return(p)
 }
@@ -56,7 +56,7 @@ qq_plot <- function(df, alpha=0.05, correction="bonferroni") {
         geom_abline(intercept = 0, slope = 1) +
         geom_hline(yintercept=alpha, linetype="dashed") +
         theme_bw() +
-        theme(text = element_text(family="Arial", size=16))
+        theme(text = element_text(size=16))
 
     return(p)
 }
