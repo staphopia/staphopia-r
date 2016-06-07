@@ -1,3 +1,6 @@
+TOKEN_FILE <- '~/.staphopia'
+TOKEN_MISSING <- paste0("Variable 'TOKEN' not found in ", TOKEN_FILE,
+                        " Unable to continue.")
 #' build_url
 #'
 #' Builds the endpoint url to query the API. This function should not be
@@ -11,6 +14,22 @@ build_url <- function(request) {
     return(paste0(base_url, request))
 }
 
+#' get_token
+#'
+#' Read ~/.staphopia for the user's Token.
+#'
+get_token <- function() {
+    if (!file.exists(TOKEN_FILE)) {
+        warning(paste0("File: ", TOKEN_FILE, " Does Not Exist"))
+    } else {
+        source(TOKEN_FILE)
+        if (!(exists("TOKEN"))) {
+            warning(paste0("TOKEN variable missing in ", TOKEN_FILE))
+        }
+    }
+}
+
+
 #' get_request
 #'
 #' Submit a GET query to Staphopia's API. This function should not be directly
@@ -20,7 +39,9 @@ build_url <- function(request) {
 #'
 #' @return Parsed JSON response.
 get_request <- function(url) {
-    req <- httr::GET(url, httr::timeout(20))
+    token_header <- paste0('Token ', TOKEN)
+    req <- httr::GET(url, httr::timeout(20),
+                     httr::add_headers(Authorization = token_header))
     json_data <- jsonlite::fromJSON(
         httr::content(req, as="text", encoding = "UTF-8")
     )
@@ -38,24 +59,33 @@ get_request <- function(url) {
 #'
 #' @return Parsed JSON response.
 submit_get_request <- function(request){
-    url <- build_url(request)
-    json_data <- get_request(url)
-    if (json_data$status != 200) {
-        return(json_data)
-    } else {
-        if (is.not.null(json_data$`next`)) {
-            pages <- submit_paginated_request(json_data$`next`)
-            data <- c(list(json_data$results), pages)
-            json_data <- list(count=json_data$count,
-                              results=data.table::rbindlist(data))
-        }
-
-        if (is.not.null(json_data$count)) {
-            return(json_data$results)
-        } else {
-            return(json_data)
-        }
+    if (!(exists("TOKEN"))) {
+        get_token()
     }
+
+    if (exists("TOKEN")) {
+        url <- build_url(request)
+        json_data <- get_request(url)
+        if (json_data$status != 200) {
+            return(json_data)
+        } else {
+            if (is.not.null(json_data$`next`)) {
+                pages <- submit_paginated_request(json_data$`next`)
+                data <- c(list(json_data$results), pages)
+                json_data <- list(count=json_data$count,
+                                  results=data.table::rbindlist(data))
+            }
+
+            if (is.not.null(json_data$count)) {
+                return(json_data$results)
+            } else {
+                return(json_data)
+            }
+        }
+    } else {
+        warning(TOKEN_MISSING)
+    }
+
 }
 
 #' submit_paginated_request
@@ -89,10 +119,19 @@ submit_paginated_request <- function(next_page) {
 #'
 #' @return Parsed JSON response.
 post_request <- function(url, data) {
-    req <- httr::POST(url, body=data, encode="json")
-    return(jsonlite::fromJSON(
-        httr::content(req, as="text", encoding = "UTF-8")
-    ))
+    if (!(exists("TOKEN"))) {
+        get_token()
+    }
+
+    if (exists("TOKEN")) {
+        req <- httr::POST(url, body=data, encode="json")
+        return(jsonlite::fromJSON(
+            httr::content(req, as="text", encoding = "UTF-8")
+        ))
+    } else {
+        warning(TOKEN_MISSING)
+    }
+
 }
 
 #' submit_post_request
