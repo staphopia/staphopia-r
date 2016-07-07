@@ -29,6 +29,13 @@ get_token <- function() {
     }
 }
 
+#' get_token_header
+#'
+#' Return the proper header for token authentication.
+#'
+get_token_header <- function() {
+    return(paste0('Token ', TOKEN))
+}
 
 #' get_request
 #'
@@ -39,9 +46,8 @@ get_token <- function() {
 #'
 #' @return Parsed JSON response.
 get_request <- function(url) {
-    token_header <- paste0('Token ', TOKEN)
     req <- httr::GET(url, httr::timeout(20),
-                     httr::add_headers(Authorization = token_header))
+                     httr::add_headers(Authorization = get_token_header()))
     json_data <- jsonlite::fromJSON(
         httr::content(req, as="text", encoding = "UTF-8")
     )
@@ -124,7 +130,8 @@ post_request <- function(url, data) {
     }
 
     if (exists("TOKEN")) {
-        req <- httr::POST(url, body=data, encode="json")
+        req <- httr::POST(url, body=data, encode="json",
+                          httr::add_headers(Authorization = get_token_header()))
         return(jsonlite::fromJSON(
             httr::content(req, as="text", encoding = "UTF-8")
         ))
@@ -152,9 +159,14 @@ submit_post_request <- function(request, data, chunk_size=10) {
     count <- 0
     results <- c()
     for (chunk in split_vector_into_chunks(data, chunk_size)) {
+        if (length(chunk) == 1){
+            chunk <- list(chunk)
+        }
         json_data <- post_request(url, list(ids=chunk))
         count <- count + json_data$count
-        print(count)
+        if (json_data$count == 0) {
+            print(json_data)
+        }
         results <- append(results, list(json_data$results))
         Sys.sleep(0.20)
     }
