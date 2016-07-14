@@ -7,7 +7,7 @@ Maintainer: Robert Petit <robbie.petit@gmail.com>
 Description: More coming
 License: To Be Determined
 LazyData: TRUE
-Imports: data.table, httr, ggplot2, jsonlite
+Imports: data.table, httr, ggplot2, jsonlite, reshape2
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-07-14 20:48:11 UTC; Michael
+Packaged: 2016-07-14 21:11:47 UTC; Michael
