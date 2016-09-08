@@ -1,7 +1,7 @@
 Package: staphopia
 Type: Package
 Title: Functions for the Staphopia API
-Version: 0.1.1
+Version: 0.1.2
 Author: Robert Petit
 Maintainer: Robert Petit <robbie.petit@gmail.com>
 Description: More coming
