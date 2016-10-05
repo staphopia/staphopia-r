@@ -50,7 +50,7 @@ get_token_header <- function() {
 #'
 #' @return Parsed JSON response.
 get_request <- function(url) {
-    req <- httr::GET(url, httr::timeout(20),
+    req <- httr::GET(url, httr::timeout(120),
                      httr::add_headers(Authorization = get_token_header()))
     json_data <- jsonlite::fromJSON(
         httr::content(req, as="text", encoding = "UTF-8")
@@ -158,7 +158,7 @@ post_request <- function(url, data) {
 #' @param chunk_size Optional parameter to determine size of chunks
 #'
 #' @return Parsed JSON response.
-submit_post_request <- function(request, data, chunk_size=10) {
+submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE) {
     url <- build_url(request)
     count <- 0
     results <- c()
@@ -166,12 +166,15 @@ submit_post_request <- function(request, data, chunk_size=10) {
         if (length(chunk) == 1){
             chunk <- list(chunk)
         }
-        json_data <- post_request(url, list(ids=chunk))
+        json_data <- post_request(url, list(ids=chunk, extra=extra_data))
         count <- count + json_data$count
         if (json_data$count == 0) {
             print(json_data)
         }
         results <- append(results, list(json_data$results))
+        if (json_data$count == 1) {
+            print(json_data)
+        }
         Sys.sleep(0.20)
     }
 

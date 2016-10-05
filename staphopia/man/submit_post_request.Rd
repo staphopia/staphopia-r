@@ -4,7 +4,7 @@
 \alias{submit_post_request}
 \title{submit_post_request}
 \usage{
-submit_post_request(request, data, chunk_size = 10)
+submit_post_request(request, data, chunk_size = 10, extra_data = FALSE)
 }
 \arguments{
 \item{request}{An API endpoint
