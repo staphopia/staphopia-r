@@ -17,6 +17,6 @@ split_sequence_into_kmers(sequence, k = 31, reverse_complement = TRUE)
 A vecter of k-mers.
 }
 \description{
-Split a seqeunce into a set of k-mers.
+Split a sequence into a set of k-mers.
 }
 

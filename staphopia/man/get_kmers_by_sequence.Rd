@@ -4,12 +4,14 @@
 \alias{get_kmers_by_sequence}
 \title{get_kmers_by_sequence}
 \usage{
-get_kmers_by_sequence(sample_ids, sequence)
+get_kmers_by_sequence(sample_ids, sequence, reverse_complement = TRUE)
 }
 \arguments{
 \item{sample_ids}{A vector of sample IDs}
 
 \item{sequence}{A DNA sequence}
+
+\item{reverse_complement}{Option to reverse complement k-mers or not.}
 }
 \value{
 Parsed JSON response.
