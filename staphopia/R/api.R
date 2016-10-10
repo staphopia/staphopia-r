@@ -175,6 +175,7 @@ submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE) 
         if (json_data$count == 1) {
             print(json_data)
         }
+
         Sys.sleep(0.20)
     }
 
@@ -182,6 +183,6 @@ submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE) 
     if (count == nrow(results)) {
         return(results)
     } else {
-        return("Error!")
+        return('Error! Count is not equal to number of rows!')
     }
 }
