@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @examples
-#' get_kmers_by_sequence(c(500,501,502), 'ATGC')
+#' get_kmers_by_sequence(c(500,501,502), 'ATGCATGCATGCATGCATGCATGCATGC')
 get_kmers_by_sequence <- function(sample_ids, sequence, reverse_complement=TRUE) {
     tables <- list()
     partitions <- get_kmer_partitions()
