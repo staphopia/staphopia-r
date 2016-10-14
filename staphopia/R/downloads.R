@@ -12,7 +12,7 @@ write_contigs_to_fasta <- function(sample_id,fasta_directory, filt_contigs = 2) 
     contigs <- filter(contigs, is_plasmids == FALSE)
     #adds contig and strain id
     ctabl <- cbind(contigs$sample,contigs$id,as_data_frame(matrix(unlist(strsplit(contigs$name,"_")), byrow = TRUE, ncol = 6)))
-    keepers <- ctabl$V6 > filt_contigs
+    keepers <- as.numeric(ctabl$V6) > filt_contigs
     keepers_names <- sapply(which(keepers), function(x) paste(as.character(ctabl[x,]),collapse = "_"))
     sa_contigs <- DNAStringSet(contigs$sequence[keepers])
     names(sa_contigs) <- keepers_names
