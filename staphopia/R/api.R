@@ -10,6 +10,10 @@ TOKEN_MISSING <- paste0("Variable 'TOKEN' not found in ", TOKEN_FILE,
 #'
 #' @return Full URL endpoint.
 build_url <- function(request) {
+    if (!(exists("USE_DEV"))) {
+        USE_DEV = FALSE
+    }
+
     if (USE_DEV == TRUE) {
         base_url <- 'https://staphopia.genetics.emory.edu/api'
     } else {
