@@ -1,4 +1,4 @@
----
+get ---
 output: html_document
 ---
 # Conducting Linear Regression Based GWAS

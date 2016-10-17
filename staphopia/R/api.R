@@ -1,3 +1,6 @@
+TOKEN_FILE <- '~/.staphopia'
+TOKEN_MISSING <- paste0("Variable 'TOKEN' not found in ", TOKEN_FILE,
+                        " Unable to continue.")
 #' build_url
 #'
 #' Builds the endpoint url to query the API. This function should not be
@@ -7,8 +10,39 @@
 #'
 #' @return Full URL endpoint.
 build_url <- function(request) {
-    base_url <- 'https://staphopia.genetics.emory.edu/api'
+    if (!(exists("USE_DEV"))) {
+        USE_DEV = FALSE
+    }
+
+    if (USE_DEV == TRUE) {
+        base_url <- 'https://staphopia.genetics.emory.edu/api'
+    } else {
+        base_url <- 'https://staphopia.emory.edu/api'
+    }
     return(paste0(base_url, request))
+}
+
+#' get_token
+#'
+#' Read ~/.staphopia for the user's Token.
+#'
+get_token <- function() {
+    if (!file.exists(TOKEN_FILE)) {
+        warning(paste0("File: ", TOKEN_FILE, " Does Not Exist"))
+    } else {
+        source(TOKEN_FILE)
+        if (!(exists("TOKEN"))) {
+            warning(paste0("TOKEN variable missing in ", TOKEN_FILE))
+        }
+    }
+}
+
+#' get_token_header
+#'
+#' Return the proper header for token authentication.
+#'
+get_token_header <- function() {
+    return(paste0('Token ', TOKEN))
 }
 
 #' get_request
@@ -20,7 +54,8 @@ build_url <- function(request) {
 #'
 #' @return Parsed JSON response.
 get_request <- function(url) {
-    req <- httr::GET(url, httr::timeout(20))
+    req <- httr::GET(url, httr::timeout(120),
+                     httr::add_headers(Authorization = get_token_header()))
     json_data <- jsonlite::fromJSON(
         httr::content(req, as="text", encoding = "UTF-8")
     )
@@ -38,24 +73,33 @@ get_request <- function(url) {
 #'
 #' @return Parsed JSON response.
 submit_get_request <- function(request){
-    url <- build_url(request)
-    json_data <- get_request(url)
-    if (json_data$status != 200) {
-        return(json_data)
-    } else {
-        if (is.not.null(json_data$`next`)) {
-            pages <- submit_paginated_request(json_data$`next`)
-            data <- c(list(json_data$results), pages)
-            json_data <- list(count=json_data$count,
-                              results=data.table::rbindlist(data))
-        }
-
-        if (is.not.null(json_data$count)) {
-            return(json_data$results)
-        } else {
-            return(json_data)
-        }
+    if (!(exists("TOKEN"))) {
+        get_token()
     }
+
+    if (exists("TOKEN")) {
+        url <- build_url(request)
+        json_data <- get_request(url)
+        if (json_data$status != 200) {
+            return(json_data)
+        } else {
+            if (is.not.null(json_data$`next`)) {
+                pages <- submit_paginated_request(json_data$`next`)
+                data <- c(list(json_data$results), pages)
+                json_data <- list(count=json_data$count,
+                                  results=data.table::rbindlist(data))
+            }
+
+            if (is.not.null(json_data$count)) {
+                return(json_data$results)
+            } else {
+                return(json_data)
+            }
+        }
+    } else {
+        warning(TOKEN_MISSING)
+    }
+
 }
 
 #' submit_paginated_request
@@ -89,10 +133,20 @@ submit_paginated_request <- function(next_page) {
 #'
 #' @return Parsed JSON response.
 post_request <- function(url, data) {
-    req <- httr::POST(url, body=data, encode="json")
-    return(jsonlite::fromJSON(
-        httr::content(req, as="text", encoding = "UTF-8")
-    ))
+    if (!(exists("TOKEN"))) {
+        get_token()
+    }
+
+    if (exists("TOKEN")) {
+        req <- httr::POST(url, body=data, encode="json",
+                          httr::add_headers(Authorization = get_token_header()))
+        return(jsonlite::fromJSON(
+            httr::content(req, as="text", encoding = "UTF-8")
+        ))
+    } else {
+        warning(TOKEN_MISSING)
+    }
+
 }
 
 #' submit_post_request
@@ -108,15 +162,24 @@ post_request <- function(url, data) {
 #' @param chunk_size Optional parameter to determine size of chunks
 #'
 #' @return Parsed JSON response.
-submit_post_request <- function(request, data, chunk_size=10) {
+submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE) {
     url <- build_url(request)
     count <- 0
     results <- c()
     for (chunk in split_vector_into_chunks(data, chunk_size)) {
-        json_data <- post_request(url, list(ids=chunk))
+        if (length(chunk) == 1){
+            chunk <- list(chunk)
+        }
+        json_data <- post_request(url, list(ids=chunk, extra=extra_data))
         count <- count + json_data$count
-        print(count)
+        if (json_data$count == 0) {
+            print(json_data)
+        }
         results <- append(results, list(json_data$results))
+        if (json_data$count == 1) {
+            print(json_data)
+        }
+
         Sys.sleep(0.20)
     }
 
@@ -124,6 +187,6 @@ submit_post_request <- function(request, data, chunk_size=10) {
     if (count == nrow(results)) {
         return(results)
     } else {
-        return("Error!")
+        return('Error! Count is not equal to number of rows!')
     }
 }

@@ -1,4 +1,4 @@
-#' get_snps_by_samples
+#' get_snps_by_sample
 #'
 #' Given a list of sample IDs return the SNPs present in each sample.
 #'
@@ -8,10 +8,10 @@
 #' @export
 #'
 #' @examples
-#' get_snps_by_samples(c(500,501,502))
-get_snps_by_samples <- function(sample_ids) {
+#' get_snps_by_sample(c(500,501,502))
+get_snps_by_sample <- function(sample_ids) {
     request <- '/variant/snp/bulk_by_sample/'
-    return(submit_post_request(request, sample_ids))
+    return(submit_post_request(request, sample_ids, chunk_size=5))
 }
 
 #' get_snps_in_bulk
@@ -28,7 +28,7 @@ get_snps_by_samples <- function(sample_ids) {
 get_snps_in_bulk <- function(snp_ids) {
     unique_snps <- unique(snp_ids)
     request <- '/variant/snp/bulk/'
-    return(submit_post_request(request, unique_snps, chunk_size=500))
+    return(submit_post_request(request, unique_snps, chunk_size=5000))
 }
 
 #' create_snp_matrix
