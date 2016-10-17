@@ -1,7 +1,7 @@
 Package: staphopia
 Type: Package
 Title: Functions for the Staphopia API
-Version: 0.1.5
+Version: 0.1.6
 Author: Robert Petit
 Maintainer: Robert Petit <robbie.petit@gmail.com>
 Description: More coming
@@ -10,4 +10,4 @@ LazyData: TRUE
 Imports: data.table, httr, ggplot2, jsonlite, reshape2, stringr, Biostrings
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-10-05
+Packaged: 2016-10-17
