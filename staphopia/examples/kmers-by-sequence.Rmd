@@ -1,0 +1,16 @@
+library(staphopia)
+
+# Let's get the Chicago samples
+tag <- get_tag_by_name('mdavid-2016')
+samples <- get_samples_by_tag(tag$id)
+
+# Now given those samples, lets get kmers from a gi en sequence
+sequence <- paste0('ATGCAATTCAAATTAAAAGAAGAAGAGATTATTAGTTTTTTAGAATTGAAATATCCAG',
+                   'AAAAAGAGTTCGAATATGGTCGTTTGTTAGTTGGACAACATAAACGTGATGATTTAGA',
+                   'TGTTTATTACTTTGGTGATACGTTTTTAATGTGCACGATTATTTCATTCAAGACATTT',
+                   'GAAATTAAAGAAACAGTAGAATTATCATATGATGCTGTTAATCGTATTGTGTTAAAAG',
+                   'ATGGATGGTTATTTAGAAAAATGAGAATAGAAACAATGCAAAAAGTGTTAAAATACGG',
+                   'TACATCTAAATTAATGTTAACTGATTTTCAAAAAGAGAATTATAATAAATATATTCAA',
+                   'GGTCAGAAACAACGCGTGATATTTGAAAATGGCCATTTTGTCTAA')
+
+kmer_hits <- get_kmers_by_sequence(samples$sample_id, sequence)
