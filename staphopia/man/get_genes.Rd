@@ -4,10 +4,12 @@
 \alias{get_genes}
 \title{get_genes}
 \usage{
-get_genes(sample_id)
+get_genes(sample_id, product_id = NULL)
 }
 \arguments{
 \item{sample_id}{An integer sample ID}
+
+\item{product_id}{Optional integer product ID}
 }
 \value{
 Parsed JSON response.

@@ -35,14 +35,22 @@ get_contigs <- function(sample_id) {
 #' Retrieve all predicted genes for a given sample.
 #'
 #' @param sample_id An integer sample ID
+#' @param product_id Optional integer product ID
 #'
 #' @return Parsed JSON response.
 #' @export
 #'
 #' @examples
 #' get_genes(500)
-get_genes <- function(sample_id) {
-    request <- paste0('/sample/', format_id(sample_id), '/genes/')
+get_genes <- function(sample_id, product_id=NULL) {
+    request = NULL
+    if (is.not.null(product_id)) {
+        request <- paste0('/sample/', format_id(sample_id),
+                          '/genes/?product_id=', product_id)
+    } else {
+        request <- paste0('/sample/', format_id(sample_id), '/genes/')
+    }
+
     return(submit_get_request(request))
 }
 

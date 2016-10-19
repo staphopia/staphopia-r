@@ -39,6 +39,7 @@ get_kmers_by_sequence <- function(sample_ids, sequence, reverse_complement=TRUE)
         )
         count <- count + json_data$count
         results <- append(results, list(json_data$results))
+        print(json_data)
         #Sys.sleep(0.0)
     }
 
