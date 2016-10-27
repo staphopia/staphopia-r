@@ -42,15 +42,22 @@ get_contigs <- function(sample_id) {
 #'
 #' @examples
 #' get_genes(500)
-get_genes <- function(sample_id, product_id=NULL) {
+get_genes <- function(sample_id, product_id=NULL, cluster_id=NULL) {
     request = NULL
-    if (is.not.null(product_id)) {
+    if (is.not.null(product_id) && is.not.null(cluster_id)){
+        request <- paste0('/sample/', format_id(sample_id),
+                          '/genes/?product_id=', product_id,
+                          '&cluster_id=', cluster_id)
+    } else if (is.not.null(product_id)) {
         request <- paste0('/sample/', format_id(sample_id),
                           '/genes/?product_id=', product_id)
+    } else if (is.not.null(cluster_id)) {
+        request <- paste0('/sample/', format_id(sample_id),
+                          '/genes/?cluster_id=', cluster_id)
     } else {
         request <- paste0('/sample/', format_id(sample_id), '/genes/')
     }
-
+    print(request)
     return(submit_get_request(request))
 }
 
@@ -147,5 +154,20 @@ get_st_blast <- function(sample_id) {
 #' get_tags(500)
 get_tags <- function(sample_id) {
     request <- paste0('/sample/', format_id(sample_id), '/tags/')
+    return(submit_get_request(request))
+}
+
+
+#' get_public_samples()
+#'
+#' Retrieve publicly available samples.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_public_samples()
+get_public_samples <- function(sample_id) {
+    request <- paste0('/sample/public/')
     return(submit_get_request(request))
 }
