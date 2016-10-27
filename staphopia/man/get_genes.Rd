@@ -4,7 +4,7 @@
 \alias{get_genes}
 \title{get_genes}
 \usage{
-get_genes(sample_id, product_id = NULL)
+get_genes(sample_id, product_id = NULL, cluster_id = NULL)
 }
 \arguments{
 \item{sample_id}{An integer sample ID}

@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-#' get_gene_products()
+ #' get_gene_products()
 get_gene_products <- function(term=FALSE) {
     if (term == FALSE) {
         return(submit_get_request('/gene/product/'))
