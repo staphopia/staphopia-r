@@ -22,7 +22,7 @@ write_contigs_to_fasta <- function(sample_id,fasta_directory, filt_contigs = 2, 
     writeXStringSet(sa_contigs, path_name, append=FALSE, format="fasta")
     if (nrow(plasmids) > 0 && return_plasmids == TRUE) {
       plastabl <- plasmid_meta(plasmids)
-      #plastabl <- cbind(sample_id,plastabl)
+      plastabl <- cbind(sample_id,plastabl)
       return(plastabl)
     }
 }
@@ -46,6 +46,6 @@ plasmid_meta <- function(contig_data){
     pldf$length <- as.numeric(as.character(pldf$length))
     pldf$coverage <- as.numeric(as.character(pldf$coverage))
     pltabl <- group_by(pldf,comp_id) %>% summarise(sum(length),sum(coverage*length)/sum(length)) %>% as.data.frame()
-    #colnames(pltabl) <- c("component","bp","av_coverage")
+    colnames(pltabl) <- c("component","bp","av_coverage")
     return(pltabl)
 }
