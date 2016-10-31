@@ -20,7 +20,7 @@ antibiotic and test.
 }
 \examples{
 get_resistance()
-get_resistance(anitbiotic="Vancomycin")
-get_resistance(anitbiotic="Vancomycin", test="Etest")
+get_resistance(antibiotic="Vancomycin")
+get_resistance(antibiotic="Vancomycin", test="Etest")
 }
 

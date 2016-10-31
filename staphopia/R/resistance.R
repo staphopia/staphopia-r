@@ -12,8 +12,8 @@
 #'
 #' @examples
 #' get_resistance()
-#' get_resistance(anitbiotic="Vancomycin")
-#' get_resistance(anitbiotic="Vancomycin", test="Etest")
+#' get_resistance(antibiotic="Vancomycin")
+#' get_resistance(antibiotic="Vancomycin", test="Etest")
 get_resistance <- function(antibiotic=NULL, test=NULL) {
     request <- '/resistance/'
     if (is.not.null(antibiotic)) {
