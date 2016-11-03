@@ -127,7 +127,7 @@ get_tags <- function(sample_id) {
 }
 
 
-#' get_public_samples()
+#' get_public_samples
 #'
 #' Retrieve publicly available samples.
 #'

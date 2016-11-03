@@ -44,6 +44,8 @@ get_gene_product <- function(product_id) {
 #' @examples
 #' get_genes(500)
 #' get_genes(c(500, 501, 502)
+#' get_genes(c(500, 501), cluster_id=2499)
+#' get_genes(c(500, 501), product_id=179)
 get_genes <- function(sample_id, product_id=NULL, cluster_id=NULL) {
     data <- c()
     count <- 0

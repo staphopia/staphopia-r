@@ -2,7 +2,7 @@
 % Please edit documentation in R/sample.R
 \name{get_public_samples}
 \alias{get_public_samples}
-\title{get_public_samples()}
+\title{get_public_samples}
 \usage{
 get_public_samples(sample_id)
 }
