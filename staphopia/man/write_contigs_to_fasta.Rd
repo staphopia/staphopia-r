@@ -4,19 +4,26 @@
 \alias{write_contigs_to_fasta}
 \title{write_contigs_to_fasta}
 \usage{
-write_contigs_to_fasta(sample_id, fasta_directory, filt_contigs = 2)
+write_contigs_to_fasta(sample_id, output_dir = "./", filt_contigs = 2,
+  return_plasmids = TRUE)
 }
 \arguments{
 \item{sample_id}{(numeric)}
 
-\item{fasta_directory}{(string)}
-
 \item{filt_contigs}{(numeric) (all contigs with coverage lower than this are removed)}
+
+\item{return_plasmids}{(if TRUE return a data_frame summarizing the plasmidSPADES header lines)}
+
+\item{fasta_directory}{(string)}
 }
 \value{
-none
+data.frame (optional)
 }
 \description{
 write_contigs_to_fasta
+}
+\examples{
+write_contigs_to_fasta(500)
+write_contigs_to_fasta(500, output_dir='~/')
 }
 

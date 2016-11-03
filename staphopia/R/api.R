@@ -150,9 +150,13 @@ post_request <- function(url, data) {
         json_data = jsonlite::fromJSON(
             httr::content(req, as="text", encoding = "UTF-8")
         )
-        if (json_data$detail == "Invalid token.") {
-            warning(paste0("Please verify the given TOKEN. ", TOKEN, " is not a ",
-                           "valid TOKEN value."), immediate. = TRUE)
+        if (is.not.null(json_data$detail)){
+            if (json_data$detail == "Invalid token.") {
+                warning(paste0("Please verify the given TOKEN. ", TOKEN, " is not a ",
+                               "valid TOKEN value."), immediate. = TRUE)
+            } else {
+                return(json_data)
+            }
         } else {
             return(json_data)
         }
@@ -184,14 +188,7 @@ submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE) 
         }
         json_data <- post_request(url, list(ids=chunk, extra=extra_data))
         count <- count + json_data$count
-        if (json_data$count == 0) {
-            print(json_data)
-        }
         results <- append(results, list(json_data$results))
-        if (json_data$count == 1) {
-            print(json_data)
-        }
-
         Sys.sleep(0.20)
     }
 
@@ -199,6 +196,8 @@ submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE) 
     if (count == nrow(results)) {
         return(results)
     } else {
+        print(count)
+        print(nrow(results))
         return('Error! Count is not equal to number of rows!')
     }
 }
