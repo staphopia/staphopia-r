@@ -1,20 +1,18 @@
 #' write_contigs_to_fasta
 #'
 #' @param sample_id (numeric)
-#' @param fasta_directory (string)
+#' @param fasta_directory (string) (ending in '/')
 #' @param filt_contigs (numeric) (all contigs with coverage lower than this are removed)
-#' @param return_plasmids (if TRUE return a data_frame summarizing the plasmidSPADES header lines)
+#' @param 
 #'
-#' @return data.frame (optional)
+#' @return 
 #' @export
 #'
 #' @examples
 #' write_contigs_to_fasta(500)
 #' write_contigs_to_fasta(500, output_dir='~/')
-write_contigs_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2,
-                                   return_plasmids = TRUE) {
+write_contigs_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2) {
     assembly <- get_contigs(sample_id)
-    plasmids <- dplyr::filter(assembly, is_plasmids == TRUE)
     contigs <- dplyr::filter(assembly, is_plasmids == FALSE)
     #adds contig and strain id
     contig_tbl <- cbind(
@@ -24,27 +22,52 @@ write_contigs_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2,
             matrix(unlist(strsplit(contigs$name, "_")), byrow = TRUE, ncol = 6)
         )
     )
-
-    keepers <- as.numeric(contig_tbl$V6) > filt_contigs
+    keepers <- as.numeric(as.character(contig_tbl$V6)) > filt_contigs
+    contig_tbl$V6 <- as.character(contig_tbl$V6)
+    contig_tbl$V4 <- as.character(contig_tbl$V4)
     sa_contigs <- Biostrings::DNAStringSet(contigs$sequence[keepers])
     names(sa_contigs) <- sapply(
         which(keepers),
-        function(x) paste(as.character(contig_tbl[x,]), collapse="_")
+        function(x) paste(as.character(contig_tbl[x,c(1,2,6,8)]), collapse="_")
     )
-    fasta_out <- paste(output_dir, sample_id, "-contigs.fasta", sep="")
+    fasta_out <- paste(output_dir,"sample_" ,sample_id, "_contigs.fasta", sep="")
     Biostrings::writeXStringSet(
         sa_contigs, fasta_out, append=FALSE, format="fasta"
     )
-
-    if (nrow(plasmids) > 0 && return_plasmids == TRUE) {
-        plasmids_tbl <- plasmid_meta(plasmids)
-        plasmids_tbl <- cbind(sample_id, plasmids_tbl)
-        return(plasmids_tbl)
-    }
 }
 
+write_plasmids_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2) {
+  assembly <- get_contigs(sample_id)
+  contigs <- dplyr::filter(assembly, is_plasmids == TRUE)
+  if (nrow(contigs) > 0 ) {
+    contig_tbl <- cbind(
+      contigs$sample,
+      contigs$id,
+      as.data.frame(
+        matrix(unlist(strsplit(contigs$name, "_")), byrow = TRUE, ncol = 8)
+      )
+    )
+    keepers <- as.numeric(as.character(contig_tbl$V6)) > filt_contigs
+    contig_tbl$V6 <- as.character(contig_tbl$V6)
+    contig_tbl$V4 <- as.character(contig_tbl$V4)
+    sa_contigs <- Biostrings::DNAStringSet(contigs$sequence[keepers])
+    # 4 fields in names - sample_id, contig_id, length, coverage
+    names(sa_contigs) <- sapply(
+      which(keepers),
+      function(x) paste(as.character(contig_tbl[x,c(1,2,6,8)]), collapse="_") 
+    )
+    fasta_out <- paste(output_dir,"sample_" ,sample_id, "_plasmids.fasta", sep="")
+    Biostrings::writeXStringSet(
+      sa_contigs, fasta_out, append=FALSE, format="fasta"
+    )
+    
+    plasmids_tbl <- plasmid_meta(contigs)
+    plasmids_tbl <- cbind(sample_id, plasmids_tbl)
+    return(plasmids_tbl)
+  }
+  
+}
 
-##get plasmids
 
 #' plasmid_meta
 #'
