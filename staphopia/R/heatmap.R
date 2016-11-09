@@ -37,7 +37,7 @@ pangenome_matrix<-function(samples){
   gene.bind <- do.call(rbind, gene.samplist)
   gene.bind <- cbind(gene.bind, value.var = rep(1,nrow(gene.bind)))
   gene.bind <- as.data.frame(gene.bind, stringsAsFactors = F)
-  gene.cast <- reshape2::acast(gene.bind, samples~cluster_id, fill = 0, value.var = "value.var")
+  gene.cast <- reshape2::acast(gene.bind, sample_id~cluster_id, fill = 0, value.var = "value.var")
   
   if(sum(duplicated(samples)) > 0){
     samples.dup <- samples[duplicated(samples),]
