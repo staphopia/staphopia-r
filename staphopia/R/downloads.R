@@ -36,6 +36,16 @@ write_contigs_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2)
     )
 }
 
+#' write_plasmids_to_fasta
+#'
+#' @param sample_id (numeric)
+#' @param output_dir (string) (ending in '/')
+#' @param filt_contigs (numeric) (all contigs with coverage lower than this are removed; default = 2)
+#'
+#' @return (data.frame) (summary of combined plasmid components)
+#' @export
+#'
+#' @examples write_plasmids_to_fasta(500, output_dir='~/')
 write_plasmids_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2) {
   assembly <- get_contigs(sample_id)
   contigs <- dplyr::filter(assembly, is_plasmids == TRUE)
