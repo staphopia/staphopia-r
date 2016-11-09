@@ -30,22 +30,6 @@ get_contigs <- function(sample_id) {
     return(submit_get_request(request))
 }
 
-#' get_genes
-#'
-#' Retrieve all predicted genes for a given sample.
-#'
-#' @param sample_id An integer sample ID
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_genes(500)
-get_genes <- function(sample_id) {
-    request <- paste0('/sample/', format_id(sample_id), '/genes/')
-    return(submit_get_request(request))
-}
-
 #' get_indels
 #'
 #' Retrieve all InDels present in a given sample.
@@ -139,5 +123,20 @@ get_st_blast <- function(sample_id) {
 #' get_tags(500)
 get_tags <- function(sample_id) {
     request <- paste0('/sample/', format_id(sample_id), '/tags/')
+    return(submit_get_request(request))
+}
+
+
+#' get_public_samples
+#'
+#' Retrieve publicly available samples.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_public_samples()
+get_public_samples <- function(sample_id) {
+    request <- paste0('/sample/public/')
     return(submit_get_request(request))
 }

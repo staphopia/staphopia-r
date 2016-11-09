@@ -19,31 +19,34 @@ samp_clust<-function(gene.list){
 #' where the values are a binary indicating presence of that gene for that 
 #' sample (1) or absence (0).
 #'
-#' @param tag The tag name as a string
+#' @param samples A vector of sample IDS. Can be created by get_samples_by_tag().
 #'
 #' @return Parsed JSON response.
 #' @export
 #'
 #' @examples
-#' pangenome_matrix('my-tag-name')
-pangenome_matrix<-function(tag){
-  tag <- get_tag_by_name(tag)
-  samples <- get_samples_by_tag(tag$id)
+#' pangenome_matrix('sample_vector')
+pangenome_matrix<-function(samples){
+  #I changed it becasue its more flexible to use a vector of sample ids =rather than a set tag.  
+  #Also I prefer to use the sample ids to name rows rather than the tag (Can always substitute later)
   
-  gene.samplist <- lapply(samples$sample_id,function(x){samp_clust(get_genes(x))})
+  #tag <- get_tag_by_name(tag)
+  #samples <- get_samples_by_tag(tag$id)
+  
+  gene.samplist <- lapply(samples,function(x){samp_clust(get_genes(x))})
   gene.bind <- do.call(rbind, gene.samplist)
   gene.bind <- cbind(gene.bind, value.var = rep(1,nrow(gene.bind)))
   gene.bind <- as.data.frame(gene.bind, stringsAsFactors = F)
-  gene.cast <- reshape2::acast(gene.bind, sample_id~cluster_id, fill = 0, value.var = "value.var")
+  gene.cast <- reshape2::acast(gene.bind, samples~cluster_id, fill = 0, value.var = "value.var")
   
-  if(sum(duplicated(samples$sample_tag)) > 0){
-    samples.dup <- samples[duplicated(samples$sample_tag),]
-    samples.uni <- samples[!duplicated(samples$sample_tag),]
-    gene.cast <- gene.cast[!rownames(gene.cast) %in% samples.dup$sample_id,]
-    rownames(gene.cast) <- samples.uni[order(as.character(samples.uni$sample_id)),"sample_tag"]
+  if(sum(duplicated(samples)) > 0){
+    samples.dup <- samples[duplicated(samples),]
+    samples.uni <- samples[!duplicated(samples),]
+    gene.cast <- gene.cast[!rownames(gene.cast) %in% samples.dup,]
+    rownames(gene.cast) <- samples.uni[order(as.character(samples.uni))]
   }
   else{
-    rownames(gene.cast) <- samples[order(as.character(samples$sample_id)),"sample_tag"]
+    rownames(gene.cast) <- samples[order(as.character(samples))]
   }
   
   gene.cast <- matrix(as.numeric(gene.cast), nrow = nrow(gene.cast), dimnames = list(rownames(gene.cast), colnames(gene.cast)))

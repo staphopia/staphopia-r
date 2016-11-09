@@ -1,6 +1,7 @@
 TOKEN_FILE <- '~/.staphopia'
 TOKEN_MISSING <- paste0("Variable 'TOKEN' not found in ", TOKEN_FILE,
                         " Unable to continue.")
+
 #' build_url
 #'
 #' Builds the endpoint url to query the API. This function should not be
@@ -81,7 +82,12 @@ submit_get_request <- function(request){
         url <- build_url(request)
         json_data <- get_request(url)
         if (json_data$status != 200) {
-            return(json_data)
+            if (json_data$detail == "Invalid token.") {
+                warning(paste0("Please verify the given TOKEN. ", TOKEN, " is not a ",
+                               "valid TOKEN value."), immediate. = TRUE)
+            } else {
+                return(json_data)
+            }
         } else {
             if (is.not.null(json_data$`next`)) {
                 pages <- submit_paginated_request(json_data$`next`)
@@ -140,13 +146,23 @@ post_request <- function(url, data) {
     if (exists("TOKEN")) {
         req <- httr::POST(url, body=data, encode="json",
                           httr::add_headers(Authorization = get_token_header()))
-        return(jsonlite::fromJSON(
-            httr::content(req, as="text", encoding = "UTF-8")
-        ))
-    } else {
-        warning(TOKEN_MISSING)
-    }
 
+        json_data = jsonlite::fromJSON(
+            httr::content(req, as="text", encoding = "UTF-8")
+        )
+        if (is.not.null(json_data$detail)){
+            if (json_data$detail == "Invalid token.") {
+                warning(paste0("Please verify the given TOKEN. ", TOKEN, " is not a ",
+                               "valid TOKEN value."), immediate. = TRUE)
+            } else {
+                return(json_data)
+            }
+        } else {
+            return(json_data)
+        }
+    } else {
+        warning(TOKEN_MISSING, call. = FALSE)
+    }
 }
 
 #' submit_post_request
@@ -172,14 +188,7 @@ submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE) 
         }
         json_data <- post_request(url, list(ids=chunk, extra=extra_data))
         count <- count + json_data$count
-        if (json_data$count == 0) {
-            print(json_data)
-        }
         results <- append(results, list(json_data$results))
-        if (json_data$count == 1) {
-            print(json_data)
-        }
-
         Sys.sleep(0.20)
     }
 
@@ -187,6 +196,8 @@ submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE) 
     if (count == nrow(results)) {
         return(results)
     } else {
+        print(count)
+        print(nrow(results))
         return('Error! Count is not equal to number of rows!')
     }
 }
