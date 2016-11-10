@@ -4,10 +4,10 @@
 \alias{pangenome_matrix}
 \title{pangenome_matrix}
 \usage{
-pangenome_matrix(tag)
+pangenome_matrix(samples)
 }
 \arguments{
-\item{tag}{The tag name as a string}
+\item{samples}{A vector of sample IDS. Can be created by get_samples_by_tag().}
 }
 \value{
 Parsed JSON response.
@@ -18,6 +18,6 @@ where the values are a binary indicating presence of that gene for that
 sample (1) or absence (0).
 }
 \examples{
-pangenome_matrix('my-tag-name')
+pangenome_matrix('sample_vector')
 }
 

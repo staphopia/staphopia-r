@@ -66,11 +66,7 @@ get_genes <- function(sample_id, product_id=NULL, cluster_id=NULL) {
         }
         json_data <- submit_get_request(request)
         data <- append(data, list(json_data))
-        if (is.not.null(json_data$count)) {
-            count <- count + json_data$count
-        } else {
-            count <- count + 0
-        }
+        count <- count + nrow(json_data)
     }
 
     results <- data.table::rbindlist(data)

@@ -3,9 +3,7 @@
 #' @param sample_id (numeric)
 #' @param fasta_directory (string) (ending in '/')
 #' @param filt_contigs (numeric) (all contigs with coverage lower than this are removed)
-#' @param 
 #'
-#' @return 
 #' @export
 #'
 #' @examples
@@ -64,18 +62,18 @@ write_plasmids_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2
     # 4 fields in names - sample_id, contig_id, length, coverage
     names(sa_contigs) <- sapply(
       which(keepers),
-      function(x) paste(as.character(contig_tbl[x,c(1,2,6,8)]), collapse="_") 
+      function(x) paste(as.character(contig_tbl[x,c(1,2,6,8)]), collapse="_")
     )
     fasta_out <- paste(output_dir,"sample_" ,sample_id, "_plasmids.fasta", sep="")
     Biostrings::writeXStringSet(
       sa_contigs, fasta_out, append=FALSE, format="fasta"
     )
-    
+
     plasmids_tbl <- plasmid_meta(contigs)
     plasmids_tbl <- cbind(sample_id, plasmids_tbl)
     return(plasmids_tbl)
   }
-  
+
 }
 
 
