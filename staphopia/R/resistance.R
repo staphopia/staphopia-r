@@ -50,35 +50,35 @@ get_resistance_by_samples <- function(sample_ids, resistance_id=NULL) {
 
 #' antibiotic_data
 #'
-#' @param no_SNPs 
+#' @param no_SNPs
 #'
-#' @return  Dataframe of staphopia SNPs associated with known AR or (no_SNP=F) dataframe of antibiotic resistance loci or 
+#' @return  Dataframe of staphopia SNPs associated with known AR or (no_SNP=F) dataframe of antibiotic resistance loci or
 #' @export antibiotic_data
 #'
 #' @examples AR_data <- antibiotic_data()
 antibiotic_data <- function(no_SNPs = TRUE){
   #outputs either dataframe of known S. aureus SNPs based on the Gordon paper
   #OR the staphopia snp IDs based on the N315 reference
-  
+
   #gyrA: S84L, E88K, G106D, S85P, E88G, E88L
   gyrA_coords <- c(7005,9674)
   gyrA_name <- c("gyrA","Ciprofloxacin")
   gyrA_posns <- c(84,88,106,85,88,88)
   gyrA_alts <- c("L","K","D","P","G","L")
   #note - E88L not represented - maybe look for unusuall number of SNPs in E88 posiiotn
-  
+
   #grlA (S80F, S80Y, E84K, E84G, E84V, D432G, Y83N, A116E, I45M, A48T, D79V, V41G, S108N)
   grlA_coords <- c(1356325,1358727)
   grlA_name <- c("grlA","Ciprofloxacin")
   grlA_posns <- c(80,80,84,84,84,432,83,116,45,48,79,41,108)
   grlA_alts <- c("F","Y","K","G","V","G","N","E","M","T","V","G","N")
-  
+
   #grlB: R470D*, E422D*, P451S*, P585S*, D443E*, R444S*
   grlB_coords <- c(1354328,1356325)
   grlB_name <- c("grlB","Ciprofloxacin")
   grlB_posns <- c(470,422,451,585,443,444)
   grlB_alts <- c("D","D","S","S","E","S")
-  
+
   #fusA A160V*, A376V, A655E, A655P*, A655V*, A67T*, A70V*, A71V*, B434N, C473S*,
   #D189G*, D189V*, D373N*, D463G*, E233Q*, E444K, E444V*, E449K*, F441Y,
   #F652S*, G451V, G452C, G452S, G556S, G617D, G664S, H438N, H457Q, H457Y,
@@ -89,7 +89,7 @@ antibiotic_data <- function(no_SNPs = TRUE){
   fusA_name <- c("fusA", "Fusidic Acid")
   fusA_posns <- c(160,376,655,655,655,67,70,71,434,473,189,189,373,463,233,444,444,449,441,652,451,452,452,556,617,664,438,457,457,430,456,461,461,161,453,651,114,404,404,406,478,115,464,464,464,659,659,659,659,76,416,385,387,436,656,607,90,90,654)
   fusA_alts <- c("V", "V", "E", "P", "V", "T", "V", "V", "N", "S","G", "V","N", "G", "Q", "K", "V", "K", "Y","S", "V", "C", "S", "S", "D", "S", "N", "Q", "Y","S", "F", "K", "S", "I", "I", "I", "H", "L", "Q", "L","S", "L", "C", "H", "S", "C", "H", "L", "S", "C", "F","N", "I", "I", "K", "I", "A", "I", "N")
-  
+
   #rpoB: A473T*, A477D, A477T*, A477V, D471G*, D471Y, D550G, H481D, H481N, H481Y,
   #I527F, I527L*, I527 M*, ins 475H, ins G475*, L466S*, M470T*, N474K*, Q456K,
   #Q468K, Q468L, Q468R, Q565R*, R484H, S463P, S464P, S486L, S529L*
@@ -99,13 +99,13 @@ antibiotic_data <- function(no_SNPs = TRUE){
   rpoB_alts <- c("T", "D", "T", "V", "G", "Y", "G", "D", "N", "Y","F", "L", "M", "S", "T", "K", "K","K", "L", "R", "R", "H", "P", "P", "L", "L")
   #only 24 SNPs - two missing since there were 26 positions
   #need to account for missing insertions
-  
-  #dfrB  F99Y, F99S, F99I, H31N, L41F, H150R, L21V*, N60I* 
+
+  #dfrB  F99Y, F99S, F99I, H31N, L41F, H150R, L21V*, N60I*
   dfrB_coords <- c(1431906,1432385)
   drfB_name <- c("dfrB","Trimethoprim")
   dfrB_posns <-c(99,99,99,31,41,150,21,60)
   dfrB_alts <-c("Y","S","I","N","F","R","V","I")
-  
+
   if (no_SNPs) {
     gyrA <- cbind(gyrA_posns,gyrA_alts,gyrA_coords[1],gyrA_coords[2],gyrA_name[1],gyrA_name[2])
     colnames(gyrA) <- c("aa_position","aa_change","N315_start","N315_end","gene","phenotype")
@@ -140,16 +140,14 @@ antibiotic_data <- function(no_SNPs = TRUE){
 
 #' find_SNPs_by_gene
 #'
-#' @param coords 
-#' @param posns 
-#' @param alts 
-#' @param gene 
-#' @param phenotype 
+#' @param coords .
+#' @param posns .
+#' @param alts .
+#' @param gene .
+#' @param phenotype .
 #'
 #' @return dataframe of SNPs associated with AR gene
 #' @export
-#'
-#' @examples
 find_SNPs_by_gene <- function(coords,posns,alts,gene,phenotype){
   assert_that(length(coords)==2)
   assert_that(coords[1]<coords[2])
@@ -171,10 +169,10 @@ find_SNPs_by_gene <- function(coords,posns,alts,gene,phenotype){
 #' @param product_id (number) product_id
 #' @param posns (number) codon posiiotn in gene where changes lead to rsistance
 #' @param alts (character) amino acid changes in gene where changes lead to redsistance
-#' @param gene (string) 
+#' @param gene (string)
 #' @param phenotype(string)
 #'
-#' @return finds 
+#' @return finds
 #' @export aa_changes_phenotype
 #'
 #' @examples gyrA_cipro_results <- aa_changes_phenotype(s_list,815,gyrA_posns,gyrA_alts,"gyrA","Ciprofloxacin")
@@ -191,7 +189,7 @@ aa_changes_phenotype <- function(samples,product_id,posns,alts,gene,phenotype) {
   names(res_list) <- samples
   samp_status <- vector("list", length(samples))
   names(samp_status) <- samples
-  
+
   aa_len <- nchar(gtab$aa)
   for (q in 1:length(gtab$sample_id)){
     samp_status[[as.character(gtab$sample_id[q])]] <- aa_len[q]
@@ -214,9 +212,9 @@ aa_changes_phenotype <- function(samples,product_id,posns,alts,gene,phenotype) {
       samp_status[[as.character(short[q])]] <- "Missing"
     }
   }
-  
+
   goodrows <- which(!(gtab$sample_id %in% unique(dups,short)))
-  
+
   for (s in goodrows){
     for (p in 1:length(posns)) {
       if (substr(gtab$aa[s],posns[p],posns[p]) == alts[p]) {
