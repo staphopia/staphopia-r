@@ -99,3 +99,27 @@ plasmid_meta <- function(contigs){
 
     return(plasmids_tbl)
 }
+
+
+#' write_proteins_2_fasta
+#'
+#' @param sample (single sample_id)
+#' @param output_dir (with following '/', e.g: "./myproteins/")
+#'
+#' @return write_proteins_2_fasta
+#' @export
+#'
+#' @examples write_proteins_2_fasta(500,"./protein_seqs/"
+#' @examples output fasta header is of the format <sample>_<staphopia proteinid>_<product id>_<cluster id>_productname
+write_proteins_2_fasta <- function(sample,output_dir = "./"){
+  #output header is <sample>_<id>_productid_clusterid_productname
+  genes <- get_genes(sample_id = sample)
+  AAs <- genes[genes$aa > 0,]
+  proteins <- Biostrings::AAStringSet(AAs$aa)
+  pr_names <- sapply(1:nrow(AAs), function(x) paste(sample,AAs$id[x],AAs$product_id[x],AAs$cluster_id[x],AAs$product[x],sep = "_"))
+  names(proteins) <- pr_names
+  fasta_out <- paste(output_dir, "sample_",sample, "_aa.fasta", sep="")
+  Biostrings::writeXStringSet(
+    proteins, fasta_out, append=FALSE, format="fasta"
+  )
+}
