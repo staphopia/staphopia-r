@@ -15,6 +15,7 @@ get_gene_products <- function(term=FALSE) {
     }
 }
 
+
 #' get_gene_product
 #'
 #' Retrieve gene product infor for a given ID.
