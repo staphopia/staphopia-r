@@ -15,6 +15,7 @@ get_gene_products <- function(term=FALSE) {
     }
 }
 
+
 #' get_gene_product
 #'
 #' Retrieve gene product infor for a given ID.
@@ -73,8 +74,6 @@ get_genes <- function(sample_id, product_id=NULL, cluster_id=NULL) {
     }
 
     results <- data.table::rbindlist(data)
-    print(count)
-    print(nrow(results))
     if (count == nrow(results)) {
         return(results)
     } else {
