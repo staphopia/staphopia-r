@@ -14,6 +14,22 @@ get_snps_by_sample <- function(sample_ids) {
     return(submit_post_request(request, sample_ids, chunk_size=5))
 }
 
+#' get_samples_by_snp
+#'
+#' Given a list of snp id return the samples in which snp is present.
+#'
+#' @param snp_id A snp ID
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_snps_by_sample(c(500,501,502))
+get_samples_by_snp <- function(snp_id) {
+    request <- paste0('/variant/snp/', snp_id, '/samples/')
+    return(submit_get_request(request))
+}
+
 #' get_snps_in_bulk
 #'
 #' Given a list of SNP IDs return information about each SNP.
