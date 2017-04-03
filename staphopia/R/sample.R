@@ -46,6 +46,7 @@ get_indels <- function(sample_id) {
     return(submit_get_request(request))
 }
 
+
 #' get_sequence_quality
 #'
 #' Retrieve sequence quality metrics for a given sample.
