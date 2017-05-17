@@ -10,7 +10,7 @@ get_gene_clusters(sample_ids)
 Parsed JSON response.
 }
 \description{
-Retrieve gene cluster for a given cluster_id.
+Retrieve gene cluster for a set of sample ids.
 }
 \examples{
 get_gene_clusters(500:505)

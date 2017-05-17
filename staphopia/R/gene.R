@@ -32,7 +32,7 @@ get_gene_cluster <- function(cluster_id) {
 
 #' get_gene_clusters
 #'
-#' Retrieve gene cluster for a given cluster_id.
+#' Retrieve gene cluster for a set of sample ids.
 #'
 #' @return Parsed JSON response.
 #' @export
@@ -40,8 +40,23 @@ get_gene_cluster <- function(cluster_id) {
 #' @examples
 #' get_gene_clusters(500:505)
 get_gene_clusters <- function(sample_ids) {
-    request <- '/gene/cluster/clusters_by_sample/'
+    request <- '/gene/cluster/clusters_by_samples/'
     return(submit_post_request(request, sample_ids, chunk_size=50))
+}
+
+
+#' get_gene_cluster_counts
+#'
+#' Retrieve gene cluster counts for a set of sample ids.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_gene_cluster_counts(500:505)
+get_gene_cluster_counts <- function(sample_ids) {
+    request <- '/gene/cluster/cluster_counts_by_samples/'
+    return(submit_post_request(request, sample_ids, chunk_size=1000))
 }
 
 
