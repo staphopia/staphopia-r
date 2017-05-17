@@ -39,6 +39,23 @@ get_tag_by_name <- function(tag) {
 #' @examples
 #' get_samples_by_tag(5)
 get_samples_by_tag <- function(tag_id) {
-    request <- paste0('/tag/', format_id(tag_id), '/samples/')
-    return(submit_get_request(request))
+    if (typeof(tag_id) == "integer") {
+        request <- paste0('/tag/', format_id(tag_id), '/samples/')
+        return(submit_get_request(request))
+    } else {
+        if (typeof(tag_id) == "character") {
+            tag <- get_tag_by_name(tag_id)
+            if (is.not.null(tag$id)) {
+                request <- paste0('/tag/', format_id(tag$id), '/samples/')
+                return(submit_get_request(request))
+            } else {
+                warning(paste0("No tags exist under the tag: ", tag_id),
+                        immediate. = TRUE)
+            }
+        } else {
+            warning(paste0("`get_samples_by_tag()` required an integer `id` ",
+                           "or character `name`. Recieved: ", tag_id),
+                    immediate. = TRUE)
+        }
+    }
 }
