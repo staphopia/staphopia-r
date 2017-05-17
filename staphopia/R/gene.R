@@ -25,9 +25,23 @@ get_gene_products <- function(term=FALSE) {
 #'
 #' @examples
 #' get_gene_cluster(500)
-get_gene_cluster <- function(cluster_id.) {
-    request <- paste0('/gene/cluster/', format_id(cluster_id.), '/')
+get_gene_cluster <- function(cluster_id) {
+    request <- paste0('/gene/cluster/', format_id(cluster_id), '/')
     return(submit_get_request(request))
+}
+
+#' get_gene_clusters
+#'
+#' Retrieve gene cluster for a given cluster_id.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_gene_clusters(500:505)
+get_gene_clusters <- function(sample_ids) {
+    request <- '/gene/cluster/clusters_by_sample/'
+    return(submit_post_request(request, sample_ids, chunk_size=50))
 }
 
 
