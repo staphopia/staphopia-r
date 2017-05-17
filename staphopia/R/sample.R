@@ -155,3 +155,19 @@ get_published_samples <- function() {
     request <- paste0('/sample/published/')
     return(submit_get_request(request))
 }
+
+#' get_unique_st_samples()
+#'
+#' Retrieve published ENA samples with a unique ST. Disclaimer: Same set of
+#' samples is not gauranteed. Use 'tag' if you want a set that does not change.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_unique_st_samples()
+get_unique_st_samples <- function() {
+    request <- paste0('/sample/unique_st/')
+    return(submit_get_request(request))
+}
+
