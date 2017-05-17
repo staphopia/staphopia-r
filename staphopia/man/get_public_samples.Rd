@@ -4,13 +4,13 @@
 \alias{get_public_samples}
 \title{get_public_samples}
 \usage{
-get_public_samples(sample_id)
+get_public_samples()
 }
 \value{
 Parsed JSON response.
 }
 \description{
-Retrieve publicly available samples.
+Retrieve publicly available ENA samples.
 }
 \examples{
 get_public_samples()

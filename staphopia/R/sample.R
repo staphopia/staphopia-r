@@ -130,14 +130,28 @@ get_tags <- function(sample_id) {
 
 #' get_public_samples
 #'
-#' Retrieve publicly available samples.
+#' Retrieve publicly available ENA samples.
 #'
 #' @return Parsed JSON response.
 #' @export
 #'
 #' @examples
 #' get_public_samples()
-get_public_samples <- function(sample_id) {
+get_public_samples <- function() {
     request <- paste0('/sample/public/')
+    return(submit_get_request(request))
+}
+
+#' get_published_samples
+#'
+#' Retrieve published ENA samples.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_published_samples()
+get_published_samples <- function() {
+    request <- paste0('/sample/published/')
     return(submit_get_request(request))
 }
