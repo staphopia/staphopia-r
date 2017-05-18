@@ -11,12 +11,14 @@ TOKEN_MISSING <- paste0("Variable 'TOKEN' not found in ", TOKEN_FILE,
 #'
 #' @return Full URL endpoint.
 build_url <- function(request) {
-    if (!(exists("USE_DEV"))) {
+    if (Sys.info()['nodename'] == "merlin") {
+        USE_DEV = TRUE
+    } else if (!(exists("USE_DEV"))) {
         USE_DEV = FALSE
     }
 
     if (USE_DEV == TRUE) {
-        base_url <- 'https://staphopia.genetics.emory.edu/api'
+        base_url <- 'https://merlin.genetics.emory.edu/api'
     } else {
         base_url <- 'https://staphopia.emory.edu/api'
     }
