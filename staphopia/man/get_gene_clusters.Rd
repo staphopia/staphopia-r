@@ -15,4 +15,3 @@ Retrieve gene cluster for a set of sample ids.
 \examples{
 get_gene_clusters(500:505)
 }
-

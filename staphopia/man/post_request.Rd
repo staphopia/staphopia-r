@@ -18,4 +18,3 @@ Parsed JSON response.
 Submit a POST query to Staphopia's API. This function should not be directly
 called by the user.
 }
-

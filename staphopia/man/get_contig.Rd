@@ -18,4 +18,3 @@ Retrieve assembled contigs by a given contig_id.
 \examples{
 get_contig(500)
 }
-

@@ -18,4 +18,3 @@ Retrieve all samples associated with a given tag.
 \examples{
 get_samples_by_tag(5)
 }
-

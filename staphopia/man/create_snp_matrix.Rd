@@ -25,4 +25,3 @@ can be used conduct a GWAS.
 \examples{
 create_snp_matrix(snps, snp_info)
 }
-

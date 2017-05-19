@@ -20,4 +20,3 @@ Produce a manhattan plot of GWAS results.
 \examples{
 manhattan_plot(df)
 }
-

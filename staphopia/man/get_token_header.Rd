@@ -9,4 +9,3 @@ get_token_header()
 \description{
 Return the proper header for token authentication.
 }
-

@@ -18,4 +18,3 @@ bool TRUE is not null or FALSE if null.
 Split a vector into smaller vectors based on the given size. This function
 should not be directly used by the user.
 }
-

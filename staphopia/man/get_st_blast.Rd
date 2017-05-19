@@ -18,4 +18,3 @@ Retrieve MLST results based on BLAST hits for a given sample.
 \examples{
 get_st_blast(500)
 }
-

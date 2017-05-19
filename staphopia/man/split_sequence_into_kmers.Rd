@@ -19,4 +19,3 @@ A vecter of k-mers.
 \description{
 Split a sequence into a set of k-mers.
 }
-

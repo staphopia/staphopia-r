@@ -18,4 +18,3 @@ Retrieve sequence quality metrics for a given sample.
 \examples{
 get_sequence_quality(500)
 }
-

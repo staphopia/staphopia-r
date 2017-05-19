@@ -23,4 +23,3 @@ get_resistance()
 get_resistance(antibiotic="Vancomycin")
 get_resistance(antibiotic="Vancomycin", test="Etest")
 }
-

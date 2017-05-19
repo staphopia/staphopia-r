@@ -16,4 +16,3 @@ matrix.
 In case scientific notation is turned on, convert it to an integer. This
 function should not be directly used by the user.
 }
-

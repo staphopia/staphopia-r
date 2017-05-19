@@ -20,4 +20,3 @@ Results from linear regression.
 Test for significance between a phenotype and SNP. This function should not
 be called by the user.'
 }
-

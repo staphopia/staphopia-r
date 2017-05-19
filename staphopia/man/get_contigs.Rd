@@ -18,4 +18,3 @@ Retrieve all assembled contigs for a given sample.
 \examples{
 get_contigs(500)
 }
-

@@ -18,4 +18,3 @@ Retrieve gene product infor for a given ID.
 \examples{
 get_gene_product(500)
 }
-

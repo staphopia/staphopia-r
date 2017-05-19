@@ -24,4 +24,3 @@ get_sccmec_subtypes(500)
 get_sccmec_subtypes(c(500, 501, 502)
 get_sccmec_subtypes(c(500, 501)))
 }
-

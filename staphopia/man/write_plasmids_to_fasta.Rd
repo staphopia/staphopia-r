@@ -22,4 +22,3 @@ write_plasmids_to_fasta
 \examples{
 write_plasmids_to_fasta(500, output_dir='~/')
 }
-

@@ -15,4 +15,3 @@ Retrieve gene cluster for a given cluster_id.
 \examples{
 get_gene_cluster(500)
 }
-

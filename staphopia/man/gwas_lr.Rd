@@ -20,4 +20,3 @@ A dataframe of linear regression results.
 Test for significance between a phenotype and SNPs. This function should not
 be called by the user.'
 }
-

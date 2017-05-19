@@ -25,4 +25,3 @@ get_genes(c(500, 501, 502)
 get_genes(c(500, 501), cluster_id=2499)
 get_genes(c(500, 501), product_id=179)
 }
-

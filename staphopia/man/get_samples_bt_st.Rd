@@ -18,4 +18,3 @@ Given a ST, return the sample IDs with MLST (SRST2).
 \examples{
 get_samples_bt_st(8)
 }
-

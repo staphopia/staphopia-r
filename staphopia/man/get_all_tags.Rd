@@ -15,4 +15,3 @@ Retrieve all Tags in Staphopia.
 \examples{
 get_all_tags()
 }
-

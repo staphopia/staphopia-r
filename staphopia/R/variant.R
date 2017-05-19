@@ -95,3 +95,19 @@ create_snp_matrix <- function(snps, samples, snp_info) {
 
     return(counts)
 }
+
+#' get_variant_counts
+#'
+#' Given a list of Sample IDs return SNP/InDel counts.
+#'
+#' @param sample_ids A vector of sample IDs
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_variant_counts(c(5000,5001,5002))
+get_variant_counts <- function(sample_ids) {
+    request <- '/variant/count/bulk_by_sample/'
+    return(submit_post_request(request, sample_ids, chunk_size=500))
+}

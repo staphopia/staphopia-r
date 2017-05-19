@@ -12,4 +12,3 @@ A list of partitions.
 \description{
 Get partitions in which kmers are split into.
 }
-

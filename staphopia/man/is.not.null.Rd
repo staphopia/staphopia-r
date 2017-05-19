@@ -16,4 +16,3 @@ bool TRUE is not null or FALSE if null.
 A wrapper for "!is.null". This function should not be directly used by the
 user.
 }
-

@@ -20,4 +20,3 @@ Returns a Bonferroni corrected alpha value..
 \examples{
 bonferroni_correction(0.05, 100)
 }
-

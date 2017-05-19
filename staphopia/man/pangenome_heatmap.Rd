@@ -25,4 +25,3 @@ my_matrix.stats<-pangenome_heatmap(my_matrix)
 my_matrix.stats<-pangenome_heatmap(my_matrix,'Heatmap','Genes','Samples')
 my_matrix.stats<-pangenome_heatmap(pangenome_matrix('my-tag-name'))
 }
-

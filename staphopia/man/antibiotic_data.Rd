@@ -18,4 +18,3 @@ antibiotic_data
 \examples{
 AR_data <- antibiotic_data()
 }
-

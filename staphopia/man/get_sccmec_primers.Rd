@@ -18,4 +18,3 @@ Retrieve sccmec type based on primer hits for a given sample.
 \examples{
 get_sccmec_primers(500)
 }
-

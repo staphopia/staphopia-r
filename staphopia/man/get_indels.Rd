@@ -18,4 +18,3 @@ Retrieve all InDels present in a given sample.
 \examples{
 get_indels(500)
 }
-

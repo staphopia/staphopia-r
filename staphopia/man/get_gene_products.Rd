@@ -15,4 +15,3 @@ Retrieve all gene products in Staphopia.
 \examples{
 get_gene_products()
 }
-

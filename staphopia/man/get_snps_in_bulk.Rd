@@ -18,4 +18,3 @@ Given a list of SNP IDs return information about each SNP.
 \examples{
 get_snps_in_bulk(c(5000,5001,5002))
 }
-

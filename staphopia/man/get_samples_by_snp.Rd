@@ -18,4 +18,3 @@ Given a list of snp id return the samples in which snp is present.
 \examples{
 get_snps_by_sample(c(500,501,502))
 }
-

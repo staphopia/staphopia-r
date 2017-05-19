@@ -18,4 +18,3 @@ Retrieve all stats associated with an assembly for a given sample.
 \examples{
 get_assembly_stats(500)
 }
-

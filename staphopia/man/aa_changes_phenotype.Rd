@@ -28,4 +28,3 @@ aa_changes_phenotype
 \examples{
 gyrA_cipro_results <- aa_changes_phenotype(s_list,815,gyrA_posns,gyrA_alts,"gyrA","Ciprofloxacin")
 }
-

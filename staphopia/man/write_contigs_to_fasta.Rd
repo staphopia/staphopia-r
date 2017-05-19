@@ -20,4 +20,3 @@ write_contigs_to_fasta
 write_contigs_to_fasta(500)
 write_contigs_to_fasta(500, output_dir='~/')
 }
-

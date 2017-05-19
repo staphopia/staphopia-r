@@ -18,4 +18,3 @@ Retrieve retrieve a tag by its name.
 \examples{
 get_tag_by_name('my-tag-name')
 }
-

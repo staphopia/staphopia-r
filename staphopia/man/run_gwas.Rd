@@ -22,4 +22,3 @@ Given a list of sample IDs return the resistance phenotypes of each sample.
 \examples{
 run_gwas(snp_matrix, phenotype)
 }
-

@@ -19,5 +19,5 @@ write_proteins_2_fasta
 }
 \examples{
 write_proteins_2_fasta(500,"./protein_seqs/"
+output fasta header is of the format <sample>_<staphopia proteinid>_<product id>_<cluster id>_productname
 }
-

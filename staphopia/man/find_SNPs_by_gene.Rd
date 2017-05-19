@@ -23,4 +23,3 @@ dataframe of SNPs associated with AR gene
 \description{
 find_SNPs_by_gene
 }
-

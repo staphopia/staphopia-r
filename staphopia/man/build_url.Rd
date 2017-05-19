@@ -16,4 +16,3 @@ Full URL endpoint.
 Builds the endpoint url to query the API. This function should not be
 directly called by the user.
 }
-

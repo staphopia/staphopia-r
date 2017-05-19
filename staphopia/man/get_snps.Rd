@@ -18,4 +18,3 @@ Retrieve all SNPs present in a given sample.
 \examples{
 get_snps(500)
 }
-

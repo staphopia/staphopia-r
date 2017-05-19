@@ -15,4 +15,3 @@ Retrieve publicly available ENA samples.
 \examples{
 get_public_samples()
 }
-

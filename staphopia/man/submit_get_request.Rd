@@ -17,4 +17,3 @@ Prepare a GET query for submission to Staphopia's API. Paginated responses
 are aggragated and submitted as a single response. This function should
 not be directly called by the user.
 }
-

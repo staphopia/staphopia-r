@@ -18,4 +18,3 @@ plasmid_meta
 \examples{
 plasmid_meta(get_contigs(500))
 }
-

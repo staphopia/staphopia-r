@@ -20,4 +20,3 @@ sample (1) or absence (0).
 \examples{
 pangenome_matrix('sample_vector')
 }
-

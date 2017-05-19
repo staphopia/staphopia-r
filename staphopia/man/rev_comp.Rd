@@ -15,4 +15,3 @@ Reverse complemented sequence as a string.
 \description{
 Reverse complement an input sequence.
 }
-

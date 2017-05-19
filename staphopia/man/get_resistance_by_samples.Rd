@@ -19,4 +19,3 @@ Given a list of sample IDs return the resistance phenotypes of each sample.
 get_resistance_by_samples(c(500,501,502))
 get_resistance_by_samples(c(500,501,502), resistance_id = 1)
 }
-

@@ -18,4 +18,3 @@ Retrieve MLST results based on SRST2 for a given sample.
 \examples{
 get_st(500)
 }
-

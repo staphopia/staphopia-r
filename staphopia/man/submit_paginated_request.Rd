@@ -17,4 +17,3 @@ Automates cycling through all pages of a paginated response. A delay of
 200ms is introduced between each query so as to not overload the API. This
 function should not be directly called by the user.
 }
-

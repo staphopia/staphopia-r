@@ -18,4 +18,3 @@ Retrieve all Tags associated with a given sample.
 \examples{
 get_tags(500)
 }
-

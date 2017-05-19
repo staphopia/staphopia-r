@@ -22,4 +22,3 @@ Given a list of sample IDs and a seqeunce return 31-mers and counts.
 \examples{
 get_kmers_by_sequence(c(500,501,502), 'ATGCATGCATGCATGCATGCATGCATGC')
 }
-

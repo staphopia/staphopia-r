@@ -9,4 +9,3 @@ get_token()
 \description{
 Read ~/.staphopia for the user's Token.
 }
-

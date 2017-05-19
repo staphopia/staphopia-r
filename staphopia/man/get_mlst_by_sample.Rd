@@ -18,4 +18,3 @@ Given a list of sample IDs return the MLST (SRST2) for each sample.
 \examples{
 get_mlst_by_sample(c(500,501,502))
 }
-

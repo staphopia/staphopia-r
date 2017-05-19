@@ -15,4 +15,3 @@ Retrieve published ENA samples.
 \examples{
 get_published_samples()
 }
-

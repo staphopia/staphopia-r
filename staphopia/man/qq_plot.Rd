@@ -19,4 +19,3 @@ Produce a QQ plot of GWAS results.
 \examples{
 qq_plot(df)
 }
-

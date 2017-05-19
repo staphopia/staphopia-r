@@ -23,4 +23,3 @@ Prepare a POST query for submission to Staphopia's API. By default post
 requests will be split into a number of smaller requests. This is hopefully
 avoid timeouts.
 }
-
