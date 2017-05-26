@@ -24,11 +24,29 @@ get_snps_by_sample <- function(sample_ids) {
 #' @export
 #'
 #' @examples
-#' get_snps_by_sample(c(500,501,502))
+#' get_samples_by_snp(c(500,501,502))
 get_samples_by_snp <- function(snp_id) {
     request <- paste0('/variant/snp/', snp_id, '/samples/')
     return(submit_get_request(request))
 }
+
+
+#' get_samples_by_indel
+#'
+#' Given a InDel ID return the samples in which InDel is present.
+#'
+#' @param indel_id An InDel ID
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_samples_by_indel(c(5000))
+get_samples_by_indel <- function(indel_id) {
+    request <- paste0('/variant/indel/', indel_id, '/samples/')
+    return(submit_get_request(request))
+}
+
 
 #' get_snps_in_bulk
 #'
@@ -110,4 +128,53 @@ create_snp_matrix <- function(snps, samples, snp_info) {
 get_variant_counts <- function(sample_ids) {
     request <- '/variant/count/bulk_by_sample/'
     return(submit_post_request(request, sample_ids, chunk_size=500))
+}
+
+#' get_variant_gene_sequence
+#'
+#' Given a list of Sample IDs and Annotation IDs return the SNP substituted
+#' gene sequences. Sequences are concatenated.
+#'
+#' @param sample_ids A vector of sample IDs
+#' @param annotation_ids A vector of sample IDs
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_variant_gene_sequence(c(5000, 5001, 5002), c(2, 3, 4))
+get_variant_gene_sequence <- function(sample_ids, annotation_ids, debug=FALSE) {
+    results <- c()
+    count <- 0
+    i <- 1
+    total <- length(sample_ids)
+    save_reference <- TRUE
+    url <- build_url('/variant/annotation/generate_variant_sequence/')
+    for (sample in sample_ids) {
+        json_data <- post_request(
+            url,
+            list(
+                ids=sample,
+                extra=list(annotation_ids=annotation_ids,
+                           save_reference=save_reference)
+            )
+        )
+        count <- count + json_data$count
+        results <- append(results, list(json_data$results))
+        if (debug == TRUE) {
+            print(paste0("Retrieving ", i, " of ", total))
+        }
+        i <- i + 1
+        save_reference <- FALSE
+        Sys.sleep(0.1)
+    }
+
+    results <- data.table::rbindlist(results)
+    if (count == nrow(results)) {
+        return(results)
+    } else {
+        return('Error! Count is not equal to number of rows!')
+    }
+
+
 }

@@ -16,5 +16,5 @@ Parsed JSON response.
 Given a list of snp id return the samples in which snp is present.
 }
 \examples{
-get_snps_by_sample(c(500,501,502))
+get_samples_by_snp(c(500,501,502))
 }
