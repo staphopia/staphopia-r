@@ -171,3 +171,19 @@ get_unique_st_samples <- function() {
     return(submit_get_request(request))
 }
 
+#' get_metadata
+#'
+#' Retrieve metadata associated with a sample.
+#'
+#' @param sample_id An integer sample ID
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_metadata(500)
+get_metadata <- function(sample_id) {
+    request <- paste0('/sample/', format_id(sample_id), '/metadata/')
+    return(submit_get_request(request))
+}
+

@@ -143,14 +143,17 @@ get_variant_counts <- function(sample_ids) {
 #'
 #' @examples
 #' get_variant_gene_sequence(c(5000, 5001, 5002), c(2, 3, 4))
-get_variant_gene_sequence <- function(sample_ids, annotation_ids, debug=FALSE) {
+get_variant_gene_sequence <- function(sample_ids, annotation_ids, chunk_size=5, debug=FALSE) {
     results <- c()
     count <- 0
     i <- 1
     total <- length(sample_ids)
     save_reference <- TRUE
     url <- build_url('/variant/annotation/generate_variant_sequence/')
-    for (sample in sample_ids) {
+    if (debug == TRUE & length(annotation_ids) > 20) {
+        print("This might take a while... go for a walk!")
+    }
+    for (sample in split_vector_into_chunks(sample_ids, chunk_size)) {
         json_data <- post_request(
             url,
             list(
@@ -162,7 +165,12 @@ get_variant_gene_sequence <- function(sample_ids, annotation_ids, debug=FALSE) {
         count <- count + json_data$count
         results <- append(results, list(json_data$results))
         if (debug == TRUE) {
-            print(paste0("Retrieving ", i, " of ", total))
+            n = i * chunk_size
+            if (n > total) {
+                n = total
+            }
+            print(paste0("Retrieved ", i * chunk_size, " of ", total,
+                         " samples. (Took: ", json_data$took, ")"))
         }
         i <- i + 1
         save_reference <- FALSE

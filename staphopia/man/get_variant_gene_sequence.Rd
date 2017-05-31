@@ -4,7 +4,8 @@
 \alias{get_variant_gene_sequence}
 \title{get_variant_gene_sequence}
 \usage{
-get_variant_gene_sequence(sample_ids, annotation_ids, debug = FALSE)
+get_variant_gene_sequence(sample_ids, annotation_ids, chunk_size = 5,
+  debug = FALSE)
 }
 \arguments{
 \item{sample_ids}{A vector of sample IDs}
