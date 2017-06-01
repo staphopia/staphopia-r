@@ -10,13 +10,13 @@
 #'
 #' @examples
 #' get_assembly_stats_by_year(is_scaffolds=TRUE, is_plasmids=FALSE)
-get_assembly_stats_by_year <- function(is_scaffolds=FALSE, is_plasmids=TRUE) {
+get_assembly_stats_by_year <- function(is_scaffolds=FALSE, is_plasmids=FALSE) {
     request <- NULL
-    if (is_scaffolds == TRUE & is_plasmids == TRUE) {
+    if (is_scaffolds && is_plasmids) {
         request <- '/info/assembly_by_year/?is_plasmids&is_scaffolds'
-    } else if (is_scaffolds == TRUE) {
+    } else if (is_scaffolds) {
         request <- '/info/assembly_by_year/?is_scaffolds'
-    } else if (is_plasmids == TRUE) {
+    } else if (is_plasmids) {
         request <- '/info/assembly_by_year/?is_plasmids'
     } else {
         request <- '/info/assembly_by_year/'
@@ -38,7 +38,7 @@ get_assembly_stats_by_year <- function(is_scaffolds=FALSE, is_plasmids=TRUE) {
 #' get_sequencing_stats_by_year(is_original=TRUE)
 get_sequencing_stats_by_year <- function(is_original=FALSE) {
     request <- NULL
-    if (is_original == TRUE) {
+    if (is_original) {
         request <- '/info/sequencing_by_year/?is_original'
     } else {
         request <- '/info/sequencing_by_year/'

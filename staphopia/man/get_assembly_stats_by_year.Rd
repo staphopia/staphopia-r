@@ -4,7 +4,7 @@
 \alias{get_assembly_stats_by_year}
 \title{get_assembly_stats_by_year}
 \usage{
-get_assembly_stats_by_year(is_scaffolds = FALSE, is_plasmids = TRUE)
+get_assembly_stats_by_year(is_scaffolds = FALSE, is_plasmids = FALSE)
 }
 \arguments{
 \item{is_scaffolds}{Boolean}
