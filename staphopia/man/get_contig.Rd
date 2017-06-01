@@ -4,10 +4,10 @@
 \alias{get_contig}
 \title{get_contig}
 \usage{
-get_contig(contig_id.)
+get_contig(contig_id)
 }
 \arguments{
-\item{contig_id.}{An integer sample ID}
+\item{contig_id}{An integer sample ID}
 }
 \value{
 Parsed JSON response.
