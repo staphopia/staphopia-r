@@ -84,9 +84,13 @@ submit_get_request <- function(request){
         url <- build_url(request)
         json_data <- get_request(url)
         if (json_data$status != 200) {
-            if (json_data$detail == "Invalid token.") {
-                warning(paste0("Please verify the given TOKEN. ", TOKEN, " is not a ",
-                               "valid TOKEN value."), immediate. = TRUE)
+            if(is.not.null(json_data$detail)) {
+                if (json_data$detail == "Invalid token.") {
+                    warning(paste0("Please verify the given TOKEN. ", TOKEN, " is not a ",
+                                   "valid TOKEN value."), immediate. = TRUE)
+                } else {
+                    return(json_data)
+                }
             } else {
                 return(json_data)
             }
