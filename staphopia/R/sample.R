@@ -159,15 +159,23 @@ get_unique_st_samples <- function() {
 #'
 #' Retrieve metadata associated with a sample.
 #'
-#' @param sample_id An integer sample ID
+#' @param sample_id An integer sample ID, or vector of sample IDs
 #'
 #' @return Parsed JSON response.
 #' @export
 #'
 #' @examples
 #' get_metadata(500)
+#' get_metadata(c(500, 501, 1000))
 get_metadata <- function(sample_id) {
-    request <- paste0('/sample/', format_id(sample_id), '/metadata/')
-    return(submit_get_request(request))
+    if (is_single_id(sample_id)) {
+        request <- paste0('/sample/', format_id(sample_id), '/metadata/')
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(sample_id)) {
+        request <- '/metadata/bulk_by_sample/'
+        return(submit_post_request(request, format_ids(sample_id), chunk_size=500))
+    } else {
+        warning('sample_id is not the expected type (integer(s) or double(s))')
+    }
 }
 

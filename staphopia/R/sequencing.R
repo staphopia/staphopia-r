@@ -15,6 +15,8 @@
 #' @examples
 #' get_sequence_quality(500)
 #' get_sequence_quality(500, original_stats=TRUE)
+#' get_sequence_quality(500, qual_per_base=TRUE)
+#' get_sequence_quality(500, read_lengths=TRUE)
 #' get_sequence_quality(c(500, 1000, 1500))
 get_sequence_quality <- function(sample_id, original_stats=FALSE,
                                  qual_per_base=FALSE, read_lengths=FALSE) {
