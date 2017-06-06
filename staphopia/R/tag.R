@@ -11,6 +11,23 @@ get_all_tags <- function() {
     return(submit_get_request('/tag/'))
 }
 
+
+#' get_tags
+#'
+#' Retrieve all Tags associated with a given sample.
+#'
+#' @param sample_id An integer sample ID
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_tags(500)
+get_tags <- function(sample_id) {
+    request <- paste0('/sample/', format_id(sample_id), '/tags/')
+    return(submit_get_request(request))
+}
+
 #' get_tag_by_name
 #'
 #' Retrieve retrieve a tag by its name.
@@ -26,6 +43,7 @@ get_tag_by_name <- function(tag) {
     request <- paste0('/tag/?tag=', tag)
     return(submit_get_request(request))
 }
+
 
 #' get_samples_by_tag
 #'

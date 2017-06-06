@@ -1,34 +1,3 @@
-#' get_assembly_stats
-#'
-#' Retrieve all stats associated with an assembly for a given sample.
-#'
-#' @param sample_id An integer sample ID
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_assembly_stats(500)
-get_assembly_stats <- function(sample_id) {
-    request <- paste0('/sample/', format_id(sample_id), '/assembly/')
-    return(submit_get_request(request))
-}
-
-#' get_contigs
-#'
-#' Retrieve all assembled contigs for a given sample.
-#'
-#' @param sample_id An integer sample ID
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_contigs(500)
-get_contigs <- function(sample_id) {
-    request <- paste0('/sample/', format_id(sample_id), '/contigs/')
-    return(submit_get_request(request))
-}
 
 #' get_indels
 #'
@@ -92,22 +61,6 @@ get_st <- function(sample_id) {
 #' get_st_blast(500)
 get_st_blast <- function(sample_id) {
     request <- paste0('/sample/', format_id(sample_id), '/st_blast/')
-    return(submit_get_request(request))
-}
-
-#' get_tags
-#'
-#' Retrieve all Tags associated with a given sample.
-#'
-#' @param sample_id An integer sample ID
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_tags(500)
-get_tags <- function(sample_id) {
-    request <- paste0('/sample/', format_id(sample_id), '/tags/')
     return(submit_get_request(request))
 }
 
