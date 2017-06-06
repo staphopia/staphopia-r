@@ -39,7 +39,7 @@ get_tag_by_name <- function(tag) {
 #' @examples
 #' get_samples_by_tag(5)
 get_samples_by_tag <- function(tag_id) {
-    if (typeof(tag_id) == "integer") {
+    if (typeof(tag_id) == "integer" | typeof(tag_id) == "double") {
         request <- paste0('/tag/', format_id(tag_id), '/samples/')
         return(submit_get_request(request))
     } else {

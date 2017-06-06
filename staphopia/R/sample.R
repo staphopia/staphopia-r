@@ -47,22 +47,6 @@ get_indels <- function(sample_id) {
 }
 
 
-#' get_sequence_quality
-#'
-#' Retrieve sequence quality metrics for a given sample.
-#'
-#' @param sample_id An integer sample ID
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_sequence_quality(500)
-get_sequence_quality <- function(sample_id) {
-    request <- paste0('/sample/', format_id(sample_id), '/qc/')
-    return(submit_get_request(request))
-}
-
 #' get_snps
 #'
 #' Retrieve all SNPs present in a given sample.
