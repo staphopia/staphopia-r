@@ -17,4 +17,5 @@ Retrieve sccmec subtype based on primer hits for a given sample.
 }
 \examples{
 get_sccmec_subtype(500)
+get_sccmec_subtype(c(500,502))
 }
