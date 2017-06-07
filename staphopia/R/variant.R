@@ -1,18 +1,52 @@
-#' get_snps_by_sample
+#' get_indels
 #'
-#' Given a list of sample IDs return the SNPs present in each sample.
+#' Retrieve all InDels present in a given sample(s).
 #'
-#' @param sample_ids A vector of sample IDs
+#' @param sample_id An integer sample ID, or vector of sample IDs
 #'
 #' @return Parsed JSON response.
 #' @export
 #'
 #' @examples
-#' get_snps_by_sample(c(500,501,502))
-get_snps_by_sample <- function(sample_ids) {
-    request <- '/variant/snp/bulk_by_sample/'
-    return(submit_post_request(request, sample_ids, chunk_size=5))
+#' get_indels(500)
+#' get_indels(c(500,501))
+get_indels <- function(sample_id) {
+    if (is_single_id(sample_id)) {
+        request <- paste0('/sample/', format_id(sample_id), '/indels/')
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(sample_id)) {
+        request <- '/variant/indel/bulk_by_sample/'
+        return(submit_post_request(request, sample_id, chunk_size=5))
+    } else {
+        warning('sample_id is not the expected type (integer(s) or double(s))')
+    }
 }
+
+
+#' get_snps
+#'
+#' Retrieve all SNPs present in a given sample(s).
+#'
+#' @param sample_id An integer sample ID, or vector of sample IDs
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_snps(500)
+#' get_snps(c(500,501))
+get_snps <- function(sample_id) {
+    if (is_single_id(sample_id)) {
+        request <- paste0('/sample/', format_id(sample_id), '/snps/')
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(sample_id)) {
+        request <- '/variant/snp/bulk_by_sample/'
+        return(submit_post_request(request, sample_id, chunk_size=5))
+    } else {
+        warning('sample_id is not the expected type (integer(s) or double(s))')
+    }
+}
+
 
 #' get_samples_by_snp
 #'
