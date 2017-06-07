@@ -10,7 +10,7 @@
 #' write_contigs_to_fasta(500)
 #' write_contigs_to_fasta(500, output_dir='~/')
 write_contigs_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2) {
-    assembly <- get_contigs(sample_id)
+    assembly <- get_assembly(sample_id)
     contigs <- dplyr::filter(assembly, is_plasmids == FALSE)
     #adds contig and strain id
     contig_tbl <- cbind(
@@ -45,7 +45,7 @@ write_contigs_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2)
 #'
 #' @examples write_plasmids_to_fasta(500, output_dir='~/')
 write_plasmids_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2) {
-  assembly <- get_contigs(sample_id)
+  assembly <- get_assembly(sample_id)
   contigs <- dplyr::filter(assembly, is_plasmids == TRUE)
   if (nrow(contigs) > 0 ) {
     contig_tbl <- cbind(
