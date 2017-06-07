@@ -2,7 +2,7 @@
 % Please edit documentation in R/mlst.R
 \name{get_samples_bt_st}
 \alias{get_samples_bt_st}
-\title{get_samples_bt_st}
+\title{get_samples_by_st}
 \usage{
 get_samples_bt_st(st)
 }
@@ -16,5 +16,5 @@ Parsed JSON response.
 Given a ST, return the sample IDs with MLST (SRST2).
 }
 \examples{
-get_samples_bt_st(8)
+get_samples_by_st(8)
 }

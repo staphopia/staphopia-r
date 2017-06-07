@@ -7,20 +7,9 @@
 #'
 #' @return ID as an integer.
 format_id <- function(x) {
-    return(format(x, scientific=F))
-}
-
-#' format_ids
-#'
-#' In case scientific notation is turned on, convert all ids to an integer. This
-#' function should not be directly used by the user.
-#'
-#' @param x A vector numeric representation of IDs
-#'
-#' @return ID as an integer.
-format_ids <- function(x) {
     return(sapply(x, function(x){format(x, scientific=F)}))
 }
+
 
 #' is.not.null
 #'

@@ -4,16 +4,17 @@
 \alias{submit_post_request}
 \title{submit_post_request}
 \usage{
-submit_post_request(request, data, chunk_size = 10, extra_data = FALSE)
+submit_post_request(request, data, chunk_size = 10, extra_data = FALSE,
+  format = TRUE)
 }
 \arguments{
-\item{request}{An API endpoint
-'}
+\item{request}{An API endpoint}
 
-\item{data}{A vector of data to be POSTED
-'}
+\item{data}{A vector of data to be POSTED}
 
 \item{chunk_size}{Optional parameter to determine size of chunks}
+
+\item{format}{Optional parameter to format ids so as to not use scientific notation}
 }
 \value{
 Parsed JSON response.

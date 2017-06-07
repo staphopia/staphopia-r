@@ -178,14 +178,17 @@ post_request <- function(url, data) {
 #' avoid timeouts.
 #'
 #' @param request An API endpoint
-#''
 #' @param data A vector of data to be POSTED
-#''
 #' @param chunk_size Optional parameter to determine size of chunks
+#' @param format Optional parameter to format ids so as to not use scientific notation
 #'
 #' @return Parsed JSON response.
-submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE) {
+submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE,
+                                format=TRUE) {
     url <- build_url(request)
+    if (format) {
+        data <- format_id(data)
+    }
     count <- 0
     results <- c()
     for (chunk in split_vector_into_chunks(data, chunk_size)) {

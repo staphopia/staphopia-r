@@ -32,37 +32,9 @@ get_snps <- function(sample_id) {
     return(submit_get_request(request))
 }
 
-#' get_st
-#'
-#' Retrieve MLST results based on SRST2 for a given sample.
-#'
-#' @param sample_id An integer sample ID
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_st(500)
-get_st <- function(sample_id) {
-    request <- paste0('/sample/', format_id(sample_id), '/st_srst2/')
-    return(submit_get_request(request))
-}
 
-#' get_st_blast
-#'
-#' Retrieve MLST results based on BLAST hits for a given sample.
-#'
-#' @param sample_id An integer sample ID
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_st_blast(500)
-get_st_blast <- function(sample_id) {
-    request <- paste0('/sample/', format_id(sample_id), '/st_blast/')
-    return(submit_get_request(request))
-}
+
+
 
 
 #' get_public_samples
@@ -126,7 +98,7 @@ get_metadata <- function(sample_id) {
         return(submit_get_request(request))
     } else if (is_multiple_ids(sample_id)) {
         request <- '/metadata/bulk_by_sample/'
-        return(submit_post_request(request, format_ids(sample_id), chunk_size=500))
+        return(submit_post_request(request, sample_id, chunk_size=500))
     } else {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }

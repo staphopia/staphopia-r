@@ -29,7 +29,7 @@ get_sequence_quality <- function(sample_id, original_stats=FALSE,
         return(submit_get_request(request))
     } else if (is_multiple_ids(sample_id)) {
         request <- paste0('/sequence-quality/bulk_by_sample/', q)
-        return(submit_post_request(request, format_ids(sample_id), chunk_size=500))
+        return(submit_post_request(request, sample_id, chunk_size=500))
     } else {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
