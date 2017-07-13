@@ -4,15 +4,12 @@
 \alias{create_snp_matrix}
 \title{create_snp_matrix}
 \usage{
-create_snp_matrix(snps, samples, snp_info)
+create_snp_matrix(snps, samples)
 }
 \arguments{
-\item{snps}{A data frame returned from 'get_snps_by_samples'
-'}
+\item{snps}{A data frame returned from 'get_snps_by_samples'}
 
-\item{samples}{A data frame of samples including sample_id and sample_tag}
-
-\item{snp_info}{A data frame returned from 'get_snps_in_bulk'
+\item{samples}{A data frame of samples including sample_id and sample_tag
 '}
 }
 \value{
@@ -23,5 +20,5 @@ Given a data frame with 'sample_id' and 'snp_id' return an SNP matrix that
 can be used conduct a GWAS.
 }
 \examples{
-create_snp_matrix(snps, snp_info)
+create_snp_matrix(snps, samples)
 }

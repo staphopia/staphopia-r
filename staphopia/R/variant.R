@@ -105,30 +105,21 @@ get_snps_in_bulk <- function(snp_ids) {
 #' can be used conduct a GWAS.
 #'
 #' @param snps A data frame returned from 'get_snps_by_samples'
-#''
 #' @param samples A data frame of samples including sample_id and sample_tag
-#'
-#' @param snp_info A data frame returned from 'get_snps_in_bulk'
 #''
 #' @return Parsed JSON response.
 #' @export
 #'
 #' @examples
-#' create_snp_matrix(snps, snp_info)
-create_snp_matrix <- function(snps, samples, snp_info) {
+#' create_snp_matrix(snps, samples)
+create_snp_matrix <- function(snps, samples) {
     # Add columns 'sample_tag' and 'reference_position' to snps
     snps <- data.table:::merge.data.table(
-        data.table:::merge.data.table(
-            data.table::data.table(snps, key=c("snp_id", "sample_id")),
-            data.table::data.table(samples[, c("sample_id", "sample_tag")],
-                                   key="sample_id"),
-            by="sample_id",
-            all.x=TRUE
-        ),
-        data.table::data.table(snp_info[, c("id", "reference_position")],
-                               key="id"),
-        by.x="snp_id",
-        by.y="id"
+        data.table::data.table(snps, key=c("snp_id", "sample_id")),
+        data.table::data.table(samples[, c("sample_id", "sample_tag")],
+                               key="sample_id"),
+        by="sample_id",
+        all.x=TRUE
     )
 
     # Create presence/absence table
