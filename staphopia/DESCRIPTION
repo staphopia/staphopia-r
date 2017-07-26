@@ -7,7 +7,7 @@ Maintainer: Robert Petit <robbie.petit@gmail.com>
 Description: More coming
 License: To Be Determined
 LazyData: TRUE
-Imports: data.table, httr, ggplot2, jsonlite, reshape2, stringr, Biostrings, roxygen2
+Imports: data.table, httr, ggplot2, jsonlite, reshape2, stringr, Biostrings, roxygen2, httptest
 RoxygenNote: 6.0.1
 NeedsCompilation: no
 Packaged: 2016-11-10
