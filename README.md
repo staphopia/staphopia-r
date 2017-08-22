@@ -1,5 +1,5 @@
 # staphopia-r
-A R library to extract data from Staphopia's API
+A R library to extract data from the [Staphopia](https://staphopia.emory.edu) API
 
 ## Installation
 
