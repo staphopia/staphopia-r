@@ -22,6 +22,7 @@ Install staphopia-r from github
  
   ```
   install_github("staphopia/staphopia-r/staphopia")
+  library("staphopia")
   ```
   
   ## Create user_name and get authenication key
