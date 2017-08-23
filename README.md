@@ -35,6 +35,6 @@ TOKEN = "xxxxxxxxxxxxxxxxxxxxxx"
 USE_DEV = FALSE
 ```
 
-'TOKEN' is the API authenication token (USE_DEV is a variable for script development)
+For 'TOKEN' substitute the API authenication token string acquired as described above (USE_DEV is a variable for script development and can be ignored)
 
 ### On Windows
