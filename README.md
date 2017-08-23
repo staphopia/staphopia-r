@@ -18,12 +18,12 @@ First install the Bioconductor Biostrings package (if not already installed)
   library(devtools)
   ```
   
-Install staphopia-r from github
+Install and test staphopia-r from github (running the tests might take 1-2 min)
  
   ```
   install_github("staphopia/staphopia-r/staphopia")
   library("staphopia")
-  test()
+  testthat::test_package("staphopia")
   ```
   
   ## Create user_name and get authenication key
