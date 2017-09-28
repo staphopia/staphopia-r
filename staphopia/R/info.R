@@ -46,3 +46,19 @@ get_sequencing_stats_by_year <- function(is_original=FALSE) {
 
     return(submit_get_request(request))
 }
+
+#' get_top_sequence_types
+#'
+#' Retrieve top X (default 10) sequence sequence types.
+#'
+#' @param total Integer
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_top_sequence_types(20)
+get_top_sequence_types <- function(total=10) {
+    request <- paste0('/top/', total, '/sequence_types/')
+    return(submit_get_request(request))
+}

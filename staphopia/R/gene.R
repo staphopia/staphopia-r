@@ -72,7 +72,7 @@ get_gene_cluster_counts <- function(sample_ids) {
 #' @examples
 #' get_gene_product(500)
 get_gene_product <- function(product_id) {
-    return(submit_get_request(paste0('/gene/product/', product_id)))
+    return(submit_get_request(paste0('/gene/product/', product_id, '/')))
 }
 
 #' get_genes
