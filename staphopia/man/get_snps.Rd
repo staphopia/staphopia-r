@@ -4,10 +4,12 @@
 \alias{get_snps}
 \title{get_snps}
 \usage{
-get_snps(sample_id)
+get_snps(sample_id, annotation_id = NULL)
 }
 \arguments{
 \item{sample_id}{An integer sample ID, or vector of sample IDs}
+
+\item{annotation_id}{An integer annotation ID to filter snps on}
 }
 \value{
 Parsed JSON response.

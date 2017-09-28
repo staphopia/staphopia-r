@@ -12,11 +12,21 @@
 #' get_indels(c(500,501))
 get_indels <- function(sample_id) {
     if (is_single_id(sample_id)) {
-        request <- paste0('/sample/', format_id(sample_id), '/indels/')
-        return(submit_get_request(request))
+        if (is.not.null(annotation_id)) {
+            request <- paste0('/sample/', format_id(sample_id), '/indels/?annotation_id=', format_id(annotation_id))
+            return(submit_get_request(request))
+        } else {
+            request <- paste0('/sample/', format_id(sample_id), '/indels/')
+            return(submit_get_request(request))
+        }
     } else if (is_multiple_ids(sample_id)) {
-        request <- '/variant/indel/bulk_by_sample/'
-        return(submit_post_request(request, sample_id, chunk_size=5))
+        if (is.not.null(annotation_id)) {
+            request <- paste0('/variant/indel/bulk_by_sample/?annotation_id=', format_id(annotation_id))
+            return(submit_post_request(request, sample_id, chunk_size=5))
+        } else {
+            request <- '/variant/indel/bulk_by_sample/'
+            return(submit_post_request(request, sample_id, chunk_size=5))
+        }
     } else {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
@@ -28,6 +38,7 @@ get_indels <- function(sample_id) {
 #' Retrieve all SNPs present in a given sample(s).
 #'
 #' @param sample_id An integer sample ID, or vector of sample IDs
+#' @param annotation_id An integer annotation ID to filter snps on
 #'
 #' @return Parsed JSON response.
 #' @export
@@ -35,18 +46,53 @@ get_indels <- function(sample_id) {
 #' @examples
 #' get_snps(500)
 #' get_snps(c(500,501))
-get_snps <- function(sample_id) {
+get_snps <- function(sample_id, annotation_id=NULL) {
     if (is_single_id(sample_id)) {
-        request <- paste0('/sample/', format_id(sample_id), '/snps/')
-        return(submit_get_request(request))
+        if (is.not.null(annotation_id)) {
+            request <- paste0('/sample/', format_id(sample_id), '/snps/?annotation_id=', format_id(annotation_id))
+            return(submit_get_request(request))
+        } else {
+            request <- paste0('/sample/', format_id(sample_id), '/snps/')
+            return(submit_get_request(request))
+        }
     } else if (is_multiple_ids(sample_id)) {
-        request <- '/variant/snp/bulk_by_sample/'
-        return(submit_post_request(request, sample_id, chunk_size=5))
+        if (is.not.null(annotation_id)) {
+            request <- paste0('/variant/snp/bulk_by_sample/?annotation_id=', format_id(annotation_id))
+            return(submit_post_request(request, sample_id, chunk_size=5))
+        } else {
+            request <- '/variant/snp/bulk_by_sample/'
+            return(submit_post_request(request, sample_id, chunk_size=5))
+        }
     } else {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
 }
 
+
+#' get_variant_annotation
+#'
+#' Get annotation info associated with a variant.
+#'
+#' @param id An integer annotation ID
+#' @param locus_tag An string locus_tag to filter annotaions on
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_variant_annotation(id=1903)
+#' get_variant_annotation(locus_tag="SA_RS09645")
+get_variant_annotation <- function(id=NULL, locus_tag=NULL) {
+    if (is.not.null(id)) {
+        request <- paste0('/variant/annotation/', format_id(id), '/')
+        return(submit_get_request(request))
+    } else if (is.not.null(locus_tag)) {
+        request <- paste0('/variant/annotation/?locus_tag=', format_id(locus_tag))
+        return(submit_get_request(request))
+    } else {
+        return(NULL)
+    }
+}
 
 #' get_samples_by_snp
 #'
