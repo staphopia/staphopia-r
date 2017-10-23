@@ -22,7 +22,7 @@ get_sccmec_primer_hits <- function(sample_id, exact_hits=FALSE, predict=FALSE) {
         return(submit_get_request(request))
     } else if (is_multiple_ids(sample_id)) {
         request <- paste0('/sccmec/primer/bulk_by_sample/', q)
-        return(submit_post_request(request, format_ids(sample_id), chunk_size=500))
+        return(submit_post_request(request, format_id(sample_id), chunk_size=500))
     } else {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
@@ -53,7 +53,7 @@ get_sccmec_subtype_hits <- function(sample_id, exact_hits=FALSE, predict=FALSE) 
         return(submit_get_request(request))
     } else if (is_multiple_ids(sample_id)) {
         request <- paste0('/sccmec/subtype/bulk_by_sample/', q)
-        return(submit_post_request(request, format_ids(sample_id), chunk_size=500))
+        return(submit_post_request(request, format_id(sample_id), chunk_size=500))
     } else {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
