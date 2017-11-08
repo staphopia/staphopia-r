@@ -7,8 +7,11 @@
 #'
 #' @examples
 #' get_public_samples()
-get_public_samples <- function() {
+get_public_samples <- function(include_location=FALSE) {
     request <- paste0('/sample/public/')
+    if (include_location == TRUE) {
+        request <- paste0('/sample/public/?include_location')
+    }
     return(submit_get_request(request))
 }
 
