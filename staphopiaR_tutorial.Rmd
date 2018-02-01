@@ -2,7 +2,7 @@
 
 # staphopia-r example commands
 
-Load libraries
+Load libraries (you may have to download and install)
 
 ```{r}
 library(staphopia)
