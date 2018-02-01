@@ -39,4 +39,6 @@ For 'TOKEN' substitute the API authenication token string acquired as described 
 
 ### On Windows
 
-<TBD>
+TBD
+
+[Example Commands](./staphopiaR_tutorial.Rmd)
