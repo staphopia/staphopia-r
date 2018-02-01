@@ -1,0 +1,115 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Load libraries
+
+```{r}
+library(staphopia)
+library(dplyr)
+library(reshape2)
+library(Biostrings)
+library(phangorn)
+library(ade4)
+library(purrr)
+library(ape)
+```
+
+#get_all_tags
+
+```{r}
+tags <- get_all_tags()
+redrun <- get_samples_by_tag(10)
+```
+
+
+##Get the public projects
+
+```{r}
+pub_sam <- get_public_samples()
+
+
+
+```
+
+##list the ST8 projects
+```{r}
+ST8_samples <- filter(pub_sam,st_stripped == 8) %>%
+  select(sample_id,sample_tag,st_stripped)
+
+```
+
+
+
+Get gene-specific SNPs
+
+```{r}
+graR_SNPs <- get_snps_in_bulk((708245*3):(708919*3))
+rpoB_SNPs <- get_snps_in_bulk((579620*3):(583171*3))
+walK_SNPs <- get_snps_in_bulk((25648*3):(27474*3))
+
+```
+
+
+```{r}
+snp2124752 <- get_samples_by_snp(graR_SNPs$id[33])
+pub_sam %>% filter(sample_id %in% snp2124752)
+```
+
+
+count SNPs
+```{r}
+graR_SNP_Counts <- map_int(graR_SNPs$id,function(x) length(get_samples_by_snp(x))) 
+  
+```
+
+
+add counts of SNPs to columns
+```{r}
+graR_ <- cbind(graR_SNPs,graR_SNP_Counts) 
+```
+
+
+```{r}
+barplot(graR_SNP_Counts, main = "graR SNP distribution")
+```
+
+#get gene products
+```{r}
+gp <- get_gene_products()
+```
+
+#Get IS256 accessions
+```{r}
+#
+IS256 <- get_genes(ST8_samples$sample_id,product_id=2034)
+
+```
+
+create stringset
+```{r}
+IS256_out <- DNAStringSet(IS256$dna)
+names(IS256_out) <- paste(IS256$sample_id,IS256$id,sep = "_")
+IS256_out <- IS256_out[width(IS256_out)==1173]
+```
+
+phylogeny/ heat map?
+
+```{r}
+IS256_bin <- as.DNAbin(IS256_out)
+dm <- dist.dna(IS256_bin)
+no_SNps <- as.matrix(as.integer(dm*1173))
+hist(no_SNps)
+njtree <- nj(dm)
+temp <- as.matrix(dm)
+heatmap(temp,cexRow = 0.2, cexCol = 0.2)
+njtree <- midpoint(njtree)
+plot(njtree,show.tip.label = T, cex = 0.5)
+```
+#ST8 metadata
+```{r}
+ST8_meta <- get_metadata(ST8_samples$sample_id)
+```
+
+
