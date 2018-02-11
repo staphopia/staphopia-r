@@ -1,6 +1,6 @@
 #' get_all_tags
 #'
-#' Retrieve all Tags in Staphopia.
+#' Retrieve all Tags owned by user
 #'
 #' @return Parsed JSON response.
 #' @export
@@ -9,6 +9,19 @@
 #' get_all_tags()
 get_all_tags <- function() {
     return(submit_get_request('/tag/'))
+}
+
+#' get_public_tags
+#'
+#' Retrieve all public Tags in Staphopia.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_public_tags()
+get_public_tags <- function() {
+    return(submit_get_request('/tag/?public'))
 }
 
 
@@ -63,8 +76,8 @@ get_samples_by_tag <- function(tag_id) {
     } else {
         if (typeof(tag_id) == "character") {
             tag <- get_tag_by_name(tag_id)
-            if (is.not.null(tag$id)) {
-                request <- paste0('/tag/', format_id(tag$id), '/samples/')
+            if (is.not.null(tag$tag_id)) {
+                request <- paste0('/tag/', format_id(tag$tag_id), '/samples/')
                 return(submit_get_request(request))
             } else {
                 warning(paste0("No tags exist under the tag: ", tag_id),

@@ -7,7 +7,6 @@
 #' @param reverse_complement Option to reverse complement k-mers or not.
 #'
 #' @return Parsed JSON response.
-#' @export
 #'
 #' @examples
 #' get_kmers_by_sequence(c(500,501,502), 'ATGCATGCATGCATGCATGCATGCATGC')
@@ -74,7 +73,6 @@ rev_comp <- function(sequence) {
 #' @param k A value of 'k' to split sequence into. Default is 31.
 #' @param reverse_complement Option to reverse complement k-mers or not.
 #'
-#' @export
 #' @return A vecter of k-mers.
 split_sequence_into_kmers <- function(sequence, k=31, reverse_complement=TRUE) {
     n <- nchar(sequence) - k + 1
@@ -90,7 +88,6 @@ split_sequence_into_kmers <- function(sequence, k=31, reverse_complement=TRUE) {
 #'
 #' Get partitions in which kmers are split into.
 #'
-#' @export
 #' @return A list of partitions.
 get_kmer_partitions <- function(sequence, k=31, reverse_complement=TRUE) {
     request <- '/kmer/partitions/?format=json'

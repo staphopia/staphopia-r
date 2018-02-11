@@ -4,7 +4,7 @@
 \alias{get_public_samples}
 \title{get_public_samples}
 \usage{
-get_public_samples()
+get_public_samples(include_location = FALSE)
 }
 \value{
 Parsed JSON response.

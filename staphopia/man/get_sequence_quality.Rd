@@ -4,17 +4,17 @@
 \alias{get_sequence_quality}
 \title{get_sequence_quality}
 \usage{
-get_sequence_quality(sample_id, original_stats = FALSE,
-  qual_per_base = FALSE, read_lengths = FALSE)
+get_sequence_quality(sample_id, stage = FALSE, qual_per_base = FALSE,
+  read_lengths = FALSE)
 }
 \arguments{
 \item{sample_id}{An integer sample ID, or vector of sample IDs}
 
-\item{original_stats}{Return stats based on raw FASTQ. BOOL (Default FALSE)}
-
 \item{qual_per_base}{Include quality per base stats. BOOL (Default FALSE)}
 
 \item{read_lengths}{Include read length distribution. BOOL (Default FALSE)}
+
+\item{original_stats}{Return stats based on raw FASTQ. BOOL (Default FALSE)}
 }
 \value{
 Parsed JSON response.
@@ -26,7 +26,7 @@ return the stats based on the raw FASTQ file.
 }
 \examples{
 get_sequence_quality(500)
-get_sequence_quality(500, original_stats=TRUE)
+get_sequence_quality(500, stage='cleanup')
 get_sequence_quality(500, qual_per_base=TRUE)
 get_sequence_quality(500, read_lengths=TRUE)
 get_sequence_quality(c(500, 1000, 1500))

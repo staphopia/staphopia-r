@@ -14,15 +14,22 @@
 #'
 #' @examples
 #' get_sequence_quality(500)
-#' get_sequence_quality(500, original_stats=TRUE)
+#' get_sequence_quality(500, stage='cleanup')
 #' get_sequence_quality(500, qual_per_base=TRUE)
 #' get_sequence_quality(500, read_lengths=TRUE)
 #' get_sequence_quality(c(500, 1000, 1500))
-get_sequence_quality <- function(sample_id, original_stats=FALSE,
+get_sequence_quality <- function(sample_id, stage=FALSE,
                                  qual_per_base=FALSE, read_lengths=FALSE) {
-    q = paste0('?', ifelse(original_stats, 'original', ''),
-               '&', ifelse(qual_per_base, 'bases', ''),
-               '&', ifelse(read_lengths, 'lengths', ''))
+
+    if (stage != FALSE) {
+        if (!(is.element(stage, c('original', 'adapter', 'ecc', 'cleanup')))) {
+            warning('"stage" must be "original", "adpater", "ecc", or "cleanup". Retrieving all.')
+            stage <- FALSE
+        }
+    }
+    q = paste0('?', ifelse(stage != FALSE, paste0('stage=', stage), ''),
+               ifelse(qual_per_base, '&bases', ''),
+               ifelse(read_lengths, '&lengths', ''))
 
     if (is_single_id(sample_id)) {
         request <- paste0('/sample/', format_id(sample_id), '/qc/', q)

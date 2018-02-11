@@ -3,6 +3,7 @@
 #' Retrieve all InDels present in a given sample(s).
 #'
 #' @param sample_id An integer sample ID, or vector of sample IDs
+#' @param annotation_id Filter results based on an annotation ID
 #'
 #' @return Parsed JSON response.
 #' @export
@@ -10,23 +11,17 @@
 #' @examples
 #' get_indels(500)
 #' get_indels(c(500,501))
-get_indels <- function(sample_id) {
+get_indels <- function(sample_id, annotation_id = NULL) {
+    q = ""
+    if (is.not.null(annotation_id)) {
+        q = paste0("?annotation_id=", annotation_id)
+    }
     if (is_single_id(sample_id)) {
-        if (is.not.null(annotation_id)) {
-            request <- paste0('/sample/', format_id(sample_id), '/indels/?annotation_id=', format_id(annotation_id))
-            return(submit_get_request(request))
-        } else {
-            request <- paste0('/sample/', format_id(sample_id), '/indels/')
-            return(submit_get_request(request))
-        }
+        request <- paste0('/sample/', format_id(sample_id), '/indels/', q)
+        return(submit_get_request(request))
     } else if (is_multiple_ids(sample_id)) {
-        if (is.not.null(annotation_id)) {
-            request <- paste0('/variant/indel/bulk_by_sample/?annotation_id=', format_id(annotation_id))
-            return(submit_post_request(request, sample_id, chunk_size=5))
-        } else {
-            request <- '/variant/indel/bulk_by_sample/'
-            return(submit_post_request(request, sample_id, chunk_size=5))
-        }
+        request <- paste0('/variant/indel_bulk_by_sample/', q)
+        return(submit_post_request(request, sample_id, chunk_size=5))
     } else {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
@@ -47,22 +42,16 @@ get_indels <- function(sample_id) {
 #' get_snps(500)
 #' get_snps(c(500,501))
 get_snps <- function(sample_id, annotation_id=NULL) {
+    q = ""
+    if (is.not.null(annotation_id)) {
+        q = paste0("?annotation_id=", annotation_id)
+    }
     if (is_single_id(sample_id)) {
-        if (is.not.null(annotation_id)) {
-            request <- paste0('/sample/', format_id(sample_id), '/snps/?annotation_id=', format_id(annotation_id))
-            return(submit_get_request(request))
-        } else {
-            request <- paste0('/sample/', format_id(sample_id), '/snps/')
-            return(submit_get_request(request))
-        }
+        request <- paste0('/sample/', format_id(sample_id), '/snps/', q)
+        return(submit_get_request(request))
     } else if (is_multiple_ids(sample_id)) {
-        if (is.not.null(annotation_id)) {
-            request <- paste0('/variant/snp/bulk_by_sample/?annotation_id=', format_id(annotation_id))
-            return(submit_post_request(request, sample_id, chunk_size=5))
-        } else {
-            request <- '/variant/snp/bulk_by_sample/'
-            return(submit_post_request(request, sample_id, chunk_size=5))
-        }
+        request <- paste0('/variant/snp_bulk_by_sample/', q)
+        return(submit_post_request(request, sample_id, chunk_size=5))
     } else {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
@@ -80,8 +69,8 @@ get_snps <- function(sample_id, annotation_id=NULL) {
 #' @export
 #'
 #' @examples
-#' get_variant_annotation(id=1903)
-#' get_variant_annotation(locus_tag="SA_RS09645")
+#' get_variant_annotation(7)
+#' get_variant_annotation(locus_tag="SA_RS00145")
 get_variant_annotation <- function(id=NULL, locus_tag=NULL) {
     if (is.not.null(id)) {
         request <- paste0('/variant/annotation/', format_id(id), '/')
@@ -92,39 +81,6 @@ get_variant_annotation <- function(id=NULL, locus_tag=NULL) {
     } else {
         return(NULL)
     }
-}
-
-#' get_samples_by_snp
-#'
-#' Given a list of snp id return the samples in which snp is present.
-#'
-#' @param snp_id A snp ID
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_samples_by_snp(c(500,501,502))
-get_samples_by_snp <- function(snp_id) {
-    request <- paste0('/variant/snp/', snp_id, '/samples/')
-    return(submit_get_request(request))
-}
-
-
-#' get_samples_by_indel
-#'
-#' Given a InDel ID return the samples in which InDel is present.
-#'
-#' @param indel_id An InDel ID
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_samples_by_indel(c(5000))
-get_samples_by_indel <- function(indel_id) {
-    request <- paste0('/variant/indel/', indel_id, '/samples/')
-    return(submit_get_request(request))
 }
 
 
@@ -185,21 +141,6 @@ create_snp_matrix <- function(snps, samples) {
     return(counts)
 }
 
-#' get_variant_counts
-#'
-#' Given a list of Sample IDs return SNP/InDel counts.
-#'
-#' @param sample_ids A vector of sample IDs
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_variant_counts(c(5000,5001,5002))
-get_variant_counts <- function(sample_ids) {
-    request <- '/variant/count/bulk_by_sample/'
-    return(submit_post_request(request, sample_ids, chunk_size=500))
-}
 
 #' get_variant_gene_sequence
 #'
@@ -254,6 +195,4 @@ get_variant_gene_sequence <- function(sample_ids, annotation_ids, chunk_size=5, 
     } else {
         return('Error! Count is not equal to number of rows!')
     }
-
-
 }

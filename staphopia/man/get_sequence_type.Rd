@@ -4,12 +4,10 @@
 \alias{get_sequence_type}
 \title{get_sequence_type}
 \usage{
-get_sequence_type(sample_id, blast = FALSE)
+get_sequence_type(sample_id)
 }
 \arguments{
 \item{sample_id}{An integer sample ID}
-
-\item{blast}{Get blast based results for each Loci, not SRST2. BOOL (Default: FALSE)}
 }
 \value{
 Parsed JSON response.

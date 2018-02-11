@@ -18,7 +18,7 @@ build_url <- function(request) {
     }
 
     if (USE_DEV == TRUE) {
-        base_url <- 'https://merlin.genetics.emory.edu/api'
+        base_url <- 'https://chlamy.genetics.emory.edu/api'
     } else {
         base_url <- 'https://staphopia.emory.edu/api'
     }
@@ -205,8 +205,6 @@ submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE,
     if (count == nrow(results)) {
         return(results)
     } else {
-        print(count)
-        print(nrow(results))
         return('Error! Count is not equal to number of rows!')
     }
 }
