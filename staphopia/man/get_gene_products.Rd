@@ -10,7 +10,7 @@ get_gene_products(term = FALSE)
 Parsed JSON response.
 }
 \description{
-Retrieve all gene products in Staphopia.
+Retrieve all gene products in Staphopia.  BRING THIS BACK
 }
 \examples{
 get_gene_products()

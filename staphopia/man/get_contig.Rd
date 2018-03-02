@@ -13,7 +13,7 @@ get_contig(contig_id)
 Parsed JSON response.
 }
 \description{
-Retrieve assembled contigs by a given contig_id.
+Retrieve assembled contigs by a given contig_id.  REWORK THIS QUERY
 }
 \examples{
 get_contig(500)

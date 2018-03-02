@@ -13,7 +13,7 @@ get_gene_product(product_id)
 Parsed JSON response.
 }
 \description{
-Retrieve gene product infor for a given ID.
+Retrieve gene product infor for a given ID. BRING THIS BACK AS SINGLE QUERY
 }
 \examples{
 get_gene_product(500)

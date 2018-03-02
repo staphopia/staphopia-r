@@ -3,6 +3,8 @@
 #' Retrieve all resistances in the database. Can be filtered based on
 #' antibiotic and test.
 #'
+#' ASSUME ARIBA RESULTS: MORE SO WHAT ARIBA TESTED
+#'
 #' @param antibiotic An antibiotic to search for
 #'
 #' @param test An antibiotic test method to search for.
@@ -30,6 +32,8 @@ get_resistance <- function(antibiotic=NULL, test=NULL) {
 #' get_resistance_by_samples
 #'
 #' Given a list of sample IDs return the resistance phenotypes of each sample.
+#'
+#' INCLUDE NEGATIVE RESULTS
 #'
 #' @param sample_ids A vector of sample IDs
 #'

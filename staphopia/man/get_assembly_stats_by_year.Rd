@@ -15,7 +15,7 @@ get_assembly_stats_by_year(is_scaffolds = FALSE, is_plasmids = FALSE)
 Parsed JSON response.
 }
 \description{
-Retrieve assembled stats by year based on when samples were first made public.
+Retrieve assembled stats by year based on when samples were first made public. REWORK QUERY BRING BACK
 }
 \examples{
 get_assembly_stats_by_year(is_scaffolds=TRUE, is_plasmids=FALSE)

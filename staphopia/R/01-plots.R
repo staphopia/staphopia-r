@@ -1,6 +1,6 @@
 #' manhattan_plot
 #'
-#' Produce a manhattan plot of GWAS results.
+#' Produce a manhattan plot of GWAS results.  CLEANUP UP
 #'
 #' @param df A data frame returned from 'run_gwas'
 #''
@@ -30,9 +30,10 @@ manhattan_plot <- function(df, genome_size=2814816, alpha=0.05,
 
     return(p)
 }
+
 #' qq_plot
 #'
-#' Produce a QQ plot of GWAS results.
+#' Produce a QQ plot of GWAS results.  CLEAN UP
 #'
 #' @param df A data frame returned from 'run_gwas'
 #''

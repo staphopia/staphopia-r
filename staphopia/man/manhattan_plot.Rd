@@ -15,7 +15,7 @@ manhattan_plot(df, genome_size = 2814816, alpha = 0.05,
 ggplot2 plot.
 }
 \description{
-Produce a manhattan plot of GWAS results.
+Produce a manhattan plot of GWAS results.  CLEANUP UP
 }
 \examples{
 manhattan_plot(df)

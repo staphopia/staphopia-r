@@ -14,7 +14,7 @@ qq_plot(df, alpha = 0.05, correction = "bonferroni")
 ggplot2 plot.
 }
 \description{
-Produce a QQ plot of GWAS results.
+Produce a QQ plot of GWAS results.  CLEAN UP
 }
 \examples{
 qq_plot(df)

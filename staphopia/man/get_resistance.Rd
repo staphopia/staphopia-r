@@ -18,6 +18,9 @@ Parsed JSON response.
 Retrieve all resistances in the database. Can be filtered based on
 antibiotic and test.
 }
+\details{
+ASSUME ARIBA RESULTS: MORE SO WHAT ARIBA TESTED
+}
 \examples{
 get_resistance()
 get_resistance(antibiotic="Vancomycin")

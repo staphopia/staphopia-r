@@ -7,7 +7,7 @@
 
 #' get_contig
 #'
-#' Retrieve assembled contigs by a given contig_id.
+#' Retrieve assembled contigs by a given contig_id.  REWORK THIS QUERY
 #'
 #' @param contig_id An integer sample ID
 #'
@@ -66,7 +66,7 @@ get_gene_cluster_counts <- function(sample_ids) {
 
 #' get_gene_products
 #'
-#' Retrieve all gene products in Staphopia.
+#' Retrieve all gene products in Staphopia.  BRING THIS BACK
 #'
 #' @return Parsed JSON response.
 #' @export
@@ -84,7 +84,7 @@ get_gene_products <- function(term=FALSE) {
 
 #' get_gene_product
 #'
-#' Retrieve gene product infor for a given ID.
+#' Retrieve gene product infor for a given ID. BRING THIS BACK AS SINGLE QUERY
 #'
 #' @param product_id An integer product ID
 #'
@@ -99,7 +99,7 @@ get_gene_product <- function(product_id) {
 
 #' get_assembly_stats_by_year
 #'
-#' Retrieve assembled stats by year based on when samples were first made public.
+#' Retrieve assembled stats by year based on when samples were first made public. REWORK QUERY BRING BACK
 #'
 #' @param is_scaffolds Boolean
 #' @param is_plasmids Boolean
@@ -126,7 +126,7 @@ get_assembly_stats_by_year <- function(is_scaffolds=FALSE, is_plasmids=FALSE) {
 
 #' get_variant_counts
 #'
-#' Given a list of Sample IDs return SNP/InDel counts.
+#' Given a list of Sample IDs return SNP/InDel counts.  REWORK
 #'
 #' @param sample_ids A vector of sample IDs
 #'
@@ -143,7 +143,7 @@ get_variant_counts <- function(sample_ids) {
 
 #' get_samples_by_snp
 #'
-#' Given a list of snp id return the samples in which snp is present.
+#' Given a list of snp id return the samples in which snp is present.  REWORK QUERY
 #'
 #' @param snp_id A snp ID
 #'
@@ -160,7 +160,7 @@ get_samples_by_snp <- function(snp_id) {
 
 #' get_samples_by_indel
 #'
-#' Given a InDel ID return the samples in which InDel is present.
+#' Given a InDel ID return the samples in which InDel is present.  REWORK QUERY
 #'
 #' @param indel_id An InDel ID
 #'

@@ -147,6 +147,14 @@ create_snp_matrix <- function(snps, samples) {
 #' Given a list of Sample IDs and Annotation IDs return the SNP substituted
 #' gene sequences. Sequences are concatenated.
 #'
+#' PRECOMPUTE THESE, FLAG FOR KMER VALIDATED
+#' sample = [{
+#'   annotation_id: 1, genic only
+#'   sequence: ATGC,
+#'   kmer_valid: T or F
+#' }, {}
+#' ]
+#'
 #' @param sample_ids A vector of sample IDs
 #' @param annotation_ids A vector of sample IDs
 #'

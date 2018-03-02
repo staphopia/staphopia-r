@@ -15,7 +15,7 @@ write_contigs_to_fasta <- function(sample_id, output_dir='./', filt_contigs = 2)
     #adds contig and strain id
     contig_tbl <- cbind(
         contigs$sample,
-        contigs$id,
+        contigs$header,
         as.data.frame(
             matrix(unlist(strsplit(contigs$name, "_")), byrow = TRUE, ncol = 6)
         )

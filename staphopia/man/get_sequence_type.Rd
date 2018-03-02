@@ -13,7 +13,7 @@ get_sequence_type(sample_id)
 Parsed JSON response.
 }
 \description{
-Retrieve MLST results based on SRST2 for a given sample(s).
+Retrieve MLST results based on Ariba, Mentalist and BLAST for a given sample(s).
 }
 \examples{
 get_sequence_type(500)
