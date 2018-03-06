@@ -204,3 +204,37 @@ get_variant_gene_sequence <- function(sample_ids, annotation_ids, chunk_size=5, 
         return('Error! Count is not equal to number of rows!')
     }
 }
+
+#' get_variant_counts
+#'
+#' Given a list of positions or annotation ids return SNP/InDel counts.
+#'
+#' @param ids A vector of positions or Annotation IDs
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_variant_counts(c(1,2,3))
+#' get_variant_counts(c(1,2,3), is_annotation = TRUE)
+get_variant_counts <- function(ids = FALSE, is_annotation = FALSE) {
+    request <- FALSE
+    if (is_single_id(ids)) {
+        if (is_annotation == TRUE) {
+            request <- paste0('/variant/counts/?annotation_id=', format_id(ids), '')
+        } else {
+            request <- paste0('/variant/counts/?position=', format_id(ids), '')
+        }
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(ids)) {
+        if (is_annotation == TRUE) {
+            request <- '/variant/counts/bulk/?is_annotation'
+        } else {
+            request <- '/variant/counts/bulk/'
+        }
+        return(submit_post_request(request, ids, chunk_size=1000))
+    } else {
+        warning('ids is not the expected type (integer(s) or double(s))')
+    }
+}
+

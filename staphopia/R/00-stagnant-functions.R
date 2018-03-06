@@ -55,18 +55,3 @@ get_gene_product <- function(product_id) {
     return(submit_get_request(paste0('/gene/product/', product_id, '/')))
 }
 
-#' get_variant_counts
-#'
-#' Given a list of Sample IDs return SNP/InDel counts.  REWORK
-#'
-#' @param sample_ids A vector of sample IDs
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_variant_counts(c(5000,5001,5002))
-get_variant_counts <- function(sample_ids) {
-    request <- '/variant/count/bulk_by_sample/'
-    return(submit_post_request(request, sample_ids, chunk_size=500))
-}
