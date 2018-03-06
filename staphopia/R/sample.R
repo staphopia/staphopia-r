@@ -68,3 +68,49 @@ get_metadata <- function(sample_id) {
     }
 }
 
+
+#' get_samples_by_indel
+#'
+#' Given a InDel ID(s) return the samples in which InDel is present.
+#'
+#' @param indel_id An InDel ID
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_samples_by_indel(c(5000))
+get_samples_by_indel <- function(indel_id) {
+    if (is_single_id(indel_id)) {
+        request <- paste0('/variant/indel/', format_id(indel_id), '/samples/')
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(indel_id)) {
+        request <- '/variant/indel/bulk_samples/'
+        return(submit_post_request(request, indel_id, chunk_size=100))
+    } else {
+        warning('indel_id is not the expected type (integer(s) or double(s))')
+    }
+}
+
+#' get_samples_by_snp
+#'
+#' Given a SNP ID(s) return the samples in which SNP is present.
+#'
+#' @param snp_id An SNP ID
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_samples_by_snp(c(5000))
+get_samples_by_snp <- function(snp_id) {
+    if (is_single_id(snp_id)) {
+        request <- paste0('/variant/snp/', format_id(snp_id), '/samples/')
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(snp_id)) {
+        request <- '/variant/snp/bulk_samples/'
+        return(submit_post_request(request, snp_id, chunk_size=100))
+    } else {
+        warning('snp_id is not the expected type (integer(s) or double(s))')
+    }
+}
