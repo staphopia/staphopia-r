@@ -1,9 +1,11 @@
 ---
 title: "Public Submissions By Year"
-output: html_notebook
+output: 
+  html_notebook: 
+    fig_height: 6
+    fig_width: 8
 ---
 
-# Public Submissions By Year
 This is a quick example on generating plots of the publicly available *Staphylococcus aureus* sequencing data by year.
 
 ### Import Packages
@@ -40,7 +42,9 @@ p <- ggplot(data=results, aes(x=year, y=count)) +
     geom_bar(stat='identity') +
     geom_text(aes(label=count), vjust = -0.5) +
     scale_x_continuous(breaks = round(seq(min(results$year), max(results$year), by = 1),1)) +
-    theme_bw()
+    theme_bw() +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=14,face="bold"))
 p
 ```
 
@@ -55,7 +59,9 @@ p <- ggplot(data=results, aes(x=year, y=overall)) +
     geom_bar(stat='identity') +
     geom_text(aes(label=overall), vjust = -0.5) +
     scale_x_continuous(breaks = round(seq(min(results$year), max(results$year), by = 1),1)) +
-    theme_bw()
+    theme_bw() +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=14,face="bold"))
 p
 ```
 
