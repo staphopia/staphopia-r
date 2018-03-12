@@ -1,3 +1,15 @@
+#' get_resistance_results
+#'
+#' Retrieve resistances as reported by Ariba for a given sample.
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' test_staphopia()
+test_staphopia <- function() {
+    devtools::test()
+}
+
 #' format_id
 #'
 #' In case scientific notation is turned on, convert it to an integer. This

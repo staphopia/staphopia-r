@@ -20,6 +20,7 @@ get_sequencing_stats_by_year <- function(is_original=FALSE) {
     return(submit_get_request(request))
 }
 
+
 #' get_top_sequence_types
 #'
 #' Retrieve top X (default 10) sequence sequence types.
@@ -34,4 +35,18 @@ get_sequencing_stats_by_year <- function(is_original=FALSE) {
 get_top_sequence_types <- function(total=10) {
     request <- paste0('/top/', total, '/sequence_types/')
     return(submit_get_request(request))
+}
+
+
+#' get_submission_by_year
+#'
+#' Retrieve the public submissions by year.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_submission_by_year()
+get_submission_by_year <- function() {
+    return(submit_get_request('/info/submission_by_year/'))
 }
