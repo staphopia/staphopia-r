@@ -73,13 +73,18 @@ get_snps <- function(sample_id, annotation_id=NULL) {
 #' get_variant_annotation(locus_tag="SA_RS00145")
 get_variant_annotation <- function(id=NULL, locus_tag=NULL) {
     if (is.not.null(id)) {
-        request <- paste0('/variant/annotation/', format_id(id), '/')
-        return(submit_get_request(request))
+        if (is_single_id(id)) {
+            request <- paste0('/variant/annotation/', format_id(id), '/')
+            return(submit_get_request(request))
+        } else if (is_multiple_ids(id)) {
+            request <- '/variant/annotation/bulk/'
+            return(submit_post_request(request, id, chunk_size=500))
+        }
     } else if (is.not.null(locus_tag)) {
         request <- paste0('/variant/annotation/?locus_tag=', format_id(locus_tag))
         return(submit_get_request(request))
     } else {
-        return(NULL)
+        return(submit_get_request('/variant/annotation/'))
     }
 }
 
