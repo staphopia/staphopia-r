@@ -1,3 +1,17 @@
+#' get_all_tags
+#'
+#' Retrieve all Tags owned by user and made public
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_all_tags()
+get_all_tags <- function() {
+    return(submit_get_request('/tag/r'))
+}
+
+
 #' get_user_tags
 #'
 #' Retrieve all Tags owned by user
@@ -8,7 +22,7 @@
 #' @examples
 #' get_user_tags()
 get_user_tags <- function() {
-    return(submit_get_request('/tag/'))
+    return(submit_get_request('/tag/?user'))
 }
 
 #' get_public_tags
@@ -88,5 +102,26 @@ get_samples_by_tag <- function(tag_id) {
                            "or character `name`. Recieved: ", tag_id),
                     immediate. = TRUE)
         }
+    }
+}
+
+#' get_samples_by_pmid
+#'
+#' Retrieve all samples associated with a given PubMed ID.
+#'
+#' @param pmid An integer PubMed ID
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_samples_by_pmid(15155238)
+get_samples_by_pmid <- function(pmid) {
+    tag <- get_tag_by_name(paste0("PMID:", pmid))
+    if (is.not.null(tag$tag_id)) {
+        request <- paste0('/tag/', format_id(tag$tag_id), '/samples/')
+        return(submit_get_request(request))
+    } else {
+        warning(paste0("No samples associated with PMID: ", pmid), immediate. = TRUE)
     }
 }
