@@ -1,3 +1,18 @@
+#' get_sample_by_name
+#'
+#' Retrieve a sample by its name.
+#'
+#' @param name An string name
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_sample_by_name("ERX389233")
+get_sample_by_name <- function(name) {
+    return(submit_get_request(paste0('/sample/?name=', name)))
+}
+
 #' get_public_samples
 #'
 #' Retrieve publicly available ENA samples.
