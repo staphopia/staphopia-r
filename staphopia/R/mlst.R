@@ -90,7 +90,7 @@ cgmlst_distance <- function(df) {
 #'
 #' @examples
 #' get_samples_by_st(8)
-get_samples_bt_st <- function(st) {
+get_samples_by_st <- function(st) {
     request <- paste0('/sample/?st=', format_id(st))
     return(submit_get_request(request))
 }
