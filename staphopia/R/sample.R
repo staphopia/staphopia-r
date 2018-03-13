@@ -17,15 +17,26 @@ get_sample_by_name <- function(name) {
 #'
 #' Retrieve publicly available ENA samples.
 #'
+#' @param include_location A boolean, includes location information with samples
+#' @param limit An integer, limit the number of samples returned
+#'
 #' @return Parsed JSON response.
 #' @export
 #'
 #' @examples
 #' get_public_samples()
-get_public_samples <- function(include_location=FALSE) {
-    request <- paste0('/sample/public/')
+#' get_public_samples(include_location = TRUE)
+#' get_public_samples(include_location = TRUE, limit = 5)
+get_public_samples <- function(include_location=FALSE, limit=FALSE) {
+    q <- ""
+    if (limit) {
+        q = paste0("limit=", limit)
+    }
+
     if (include_location == TRUE) {
-        request <- paste0('/sample/public/?include_location')
+        request <- paste0('/sample/public/?include_location&', q)
+    } else {
+        request <- paste0('/sample/public/?', q)
     }
     return(submit_get_request(request))
 }
@@ -34,13 +45,21 @@ get_public_samples <- function(include_location=FALSE) {
 #'
 #' Retrieve published ENA samples.
 #'
+#' @param limit An integer, limit the number of samples returned
+#'
 #' @return Parsed JSON response.
 #' @export
 #'
 #' @examples
 #' get_published_samples()
-get_published_samples <- function() {
-    request <- paste0('/sample/published/')
+#' get_published_samples(limit=5)
+get_published_samples <- function(limit = FALSE) {
+    q <- ""
+    if (limit) {
+        q = paste0("limit=", limit)
+    }
+
+    request <- paste0('/sample/published/?', q)
     return(submit_get_request(request))
 }
 

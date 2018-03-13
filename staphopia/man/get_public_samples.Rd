@@ -4,7 +4,12 @@
 \alias{get_public_samples}
 \title{get_public_samples}
 \usage{
-get_public_samples(include_location = FALSE)
+get_public_samples(include_location = FALSE, limit = FALSE)
+}
+\arguments{
+\item{include_location}{A boolean, includes location information with samples}
+
+\item{limit}{An integer, limit the number of samples returned}
 }
 \value{
 Parsed JSON response.
@@ -14,4 +19,6 @@ Retrieve publicly available ENA samples.
 }
 \examples{
 get_public_samples()
+get_public_samples(include_location = TRUE)
+get_public_samples(include_location = TRUE, limit = 5)
 }
