@@ -92,3 +92,26 @@ get_sccmec_subtype <- function(sample_id) {
     return(get_sccmec_subtype_hits(sample_id, predict=TRUE))
 }
 
+#' get_sccmec_protein_hits
+#'
+#' Retrieve SCCmec Protein hits for a given sample(s).
+#'
+#' @param sample_id An integer sample ID, or vector of sample IDs
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_sccmec_protein_hits(500)
+#' get_sccmec_protein_hits(c(500, 1000, 1500))
+get_sccmec_protein_hits <- function(sample_id, exact_hits=FALSE, predict=FALSE) {
+    if (is_single_id(sample_id)) {
+        request <- paste0('/sample/', format_id(sample_id), '/sccmec_proteins/')
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(sample_id)) {
+        request <- paste0('/sccmec/protein/bulk_by_sample/')
+        return(submit_post_request(request, format_id(sample_id), chunk_size=500))
+    } else {
+        warning('sample_id is not the expected type (integer(s) or double(s))')
+    }
+}
