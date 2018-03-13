@@ -3,7 +3,7 @@ title: "Public Submissions By Year"
 output: 
   html_notebook: 
     fig_height: 6
-    fig_width: 8
+    fig_width: 12
 ---
 
 This is a quick example on generating plots of the publicly available *Staphylococcus aureus* sequencing data by year.
@@ -13,6 +13,7 @@ This is a quick example on generating plots of the publicly available *Staphyloc
 ```{r}
 library(staphopia)
 library(ggplot2)
+library(reshape2)
 ```
 
 ### Get Our Data
@@ -26,8 +27,12 @@ results
 In the table above, there are three columns:
 
 1. year: The year in which an experiment was made public in ENA/SRA
-2. count: The number of submissions for a given year
-3. overall: The sum of each of the previous years
+2. published: The number of submissions associated with a publication for a given year
+3. unpublished: The number of submissions **not** associated with a publication for a given year
+4. count: The number of submissions for a given year
+5. overall_published:The sum of published samples of the previous years
+6. overall_unpublished: The sum of unpublished samples of the previous years
+7. overall: The sum of each of the previous years
 
 ### Plotting Our Data
 We'll use *ggplot2* to make two simple plots to visualize our data.
@@ -35,10 +40,12 @@ We'll use *ggplot2* to make two simple plots to visualize our data.
 #### Submissions Per Year
 Here we are just going to look at the per year submissions.
 
-```{r}
+```{r fig.width=12, fig.asp=0.4}
+title <- substitute(paste("Per year (2010-present) total of publicly available sequenced ", italic('S. aureus')," samples (N = ", x,")."), list(x=format(max(results$overall), big.mark=',', scientific=FALSE)))
 p <- ggplot(data=results, aes(x=year, y=count)) +
     xlab("Year") +
-    ylab("Total Submitted Samples") +
+    ylab("Total Submitted Samples Per Year") +
+    ggtitle(title) +
     geom_bar(stat='identity') +
     geom_text(aes(label=count), vjust = -0.5) +
     scale_x_continuous(breaks = round(seq(min(results$year), max(results$year), by = 1),1)) +
@@ -52,10 +59,12 @@ p
 #### Overall Submissions
 Changing gears a litte, here we are going to look at the overall growth of *S. aureus* sequencing data over the years.
 
-```{r}
+```{r fig.width=12, fig.asp=0.4}
+title <- substitute(paste("Cumulative total of publicly available sequenced ", italic('S. aureus')," samples (N = ", x,") by year (2010-present)."), list(x=format(max(results$overall), big.mark=',', scientific=FALSE)))
 p <- ggplot(data=results, aes(x=year, y=overall)) +
     xlab("Year") +
-    ylab("Overall Submitted Samples") +
+    ylab("Cumulative Submitted Samples") +
+    ggtitle(title) +
     geom_bar(stat='identity') +
     geom_text(aes(label=overall), vjust = -0.5) +
     scale_x_continuous(breaks = round(seq(min(results$year), max(results$year), by = 1),1)) +
@@ -65,3 +74,31 @@ p <- ggplot(data=results, aes(x=year, y=overall)) +
 p
 ```
 
+#### Published vs Unpublished By Year
+For our final plot, we'll look at the number of samples that were referenced in a publication along side those that weren't. We'll need to melt the data in order to plot our groups.
+```{r fig.width=12, fig.asp=0.5}
+melted <- melt(results, id=c('year'), measure.vars = c('published', 'unpublished'))
+melted$title <- ifelse(melted$variable == 'published', 'Published', 'Unpublished')
+
+title <- substitute(paste("Published (N = ", p, ") and unpubished (N = ", u, ") publicly available ", italic('S. aureus')," samples between ", min_year, " and ", max_year, "."), list(
+    p=format(max(results$overall_published), big.mark=',', scientific=FALSE),
+    u=format(max(results$overall_unpublished), big.mark=',', scientific=FALSE),
+    min_year=min(results$year),
+    max_year=max(results$year)
+))
+p <- ggplot(data=melted, aes(x=year, y=value, fill=title)) +
+    xlab("Year") +
+    ylab("Published and Unpublished Samples Per Year") +
+    ggtitle(title) +
+    geom_bar(stat='identity', position='dodge') +
+    geom_text(aes(label=value), vjust = -0.5, position = position_dodge(.9)) +
+    scale_fill_manual(values=c("#2ca25f", "#5ab4ac")) +
+    scale_x_continuous(breaks = round(seq(min(results$year), max(results$year), by = 1),1)) +
+    theme_bw() +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=14,face="bold"),
+          legend.title = element_blank())
+    
+
+p
+```

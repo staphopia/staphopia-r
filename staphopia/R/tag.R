@@ -1,4 +1,4 @@
-#' get_all_tags
+#' get_user_tags
 #'
 #' Retrieve all Tags owned by user
 #'
@@ -6,8 +6,8 @@
 #' @export
 #'
 #' @examples
-#' get_all_tags()
-get_all_tags <- function() {
+#' get_user_tags()
+get_user_tags <- function() {
     return(submit_get_request('/tag/'))
 }
 

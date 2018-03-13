@@ -53,11 +53,12 @@ results
 ### Plot Our Data
 Here we'll generate a simple plot to visualize the top 10 sequence types represented in Staphopia's database.
 
-```{r}
+```{r fig.width=12, fig.asp=0.45}
 results <- get_top_sequence_types()
 p <- ggplot(data=results, aes(x=reorder(sequence_type, -count), y=count)) +
     xlab("Sequence Type") +
     ylab("Total Represented Samples") +
+    ggtitle(substitute(paste("Top 10 sequence types represented in public ", italic('S. aureus')," sequencing projects."))) +
     geom_bar(stat="identity") +
     geom_text(aes(label=count), vjust = -0.5) + 
     theme_bw() +
