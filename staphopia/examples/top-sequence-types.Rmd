@@ -22,7 +22,7 @@ results
 
 In the table above, there are three columns:
 
-1. sequence_type: The MLST representation
+1. st: The MLST representation
 2. count: Total number of samples with said seqeunce type
 
 #### Adjusting Total Sequence Types Returned
@@ -55,7 +55,7 @@ Here we'll generate a simple plot to visualize the top 10 sequence types represe
 
 ```{r fig.width=12, fig.asp=0.45}
 results <- get_top_sequence_types()
-p <- ggplot(data=results, aes(x=reorder(sequence_type, -count), y=count)) +
+p <- ggplot(data=results, aes(x=reorder(st, -count), y=count)) +
     xlab("Sequence Type") +
     ylab("Total Represented Samples") +
     ggtitle(substitute(paste("Top 10 sequence types represented in public ", italic('S. aureus')," sequencing projects."))) +

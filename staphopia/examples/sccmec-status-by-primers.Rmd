@@ -1,0 +1,161 @@
+---
+title: "Public Submissions By Year"
+output: 
+  html_notebook: 
+    fig_height: 6
+    fig_width: 12
+---
+
+This is a quick example on generating plots of the publicly available *Staphylococcus aureus* MRSA status by sequence type.
+
+### Import Packages
+
+```{r}
+library(staphopia)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+```
+
+### Get Our Data
+We'll use the **get_public_samples()** function to do exactly that, retrieve all publicly available samples. After a short while, you will have information for over 40,000 samples!
+
+```{r}
+samples <- get_public_samples()
+head(samples)
+```
+
+In the table above, there are five columns:
+
+1. sampel_id: The unique database identifier for a sample
+2. is_public: Whether or not the sample is available to all users
+3. is_published: The publication status of a sample
+4. name: A name given to the sample
+5. st: The MLST assigned to a sample (0 means tools were unable to assign a sequence type)
+
+### Get SCCmec Primer Hits
+Next thing we need to do is retrieve the BLAST results for the SCCmec primers. We can use **get_sccmec_primer_hits** to do that. This might take some time, but after a while you will get a data frame of over 1,000,000 blast results.
+
+```{r}
+primer_hits <- get_sccmec_primer_hits(samples$sample_id)
+head(primer_hits)
+```
+
+In this case, there isn't a strong need to go over each column in the table. For information purposes, a majority of the columns use the same name as their BLAST name. For our analysis, we are interested in the *title* and *hamming_distance* columns.
+
+1. title: The name of the primer the BLAST result is associated with
+2. hamming_distance: The number of gaps and mismatches between the query and sequence (0=identital match, as hamming increases the match is poorer)
+
+### Identifying *mecA* Presence
+For this analysis, we are not to concerned about which SCCmec type is present. Instead, we want to know is *mecA* (methicillin resistance) is present.
+
+#### Filtering *mecA*
+Since we are only interested in *mecA*, we can filter out the rest. We can use **grepl** to pull out rows in which *mecA* is in the title column.
+
+```{r}
+meca_primer_hits <- primer_hits[grepl("mecA", primer_hits$title),]
+head(meca_primer_hits)
+```
+
+Now we have a dataframe with only the *mecA* related primer hits. Now we'll need to aggregate these by *sample_id* taking the sum of the hamming distance between each primer.
+
+```{r}
+meca_hamming <- meca_primer_hits %>%
+  group_by(sample_id) %>%
+  summarise(total_hamming = sum(hamming_distance))
+head(meca_hamming)
+```
+
+This leaves use with a data frame that has two columns: *sample_id* and *total_hamming*.
+
+### Visualize *mecA* Hamming Distance
+We'll now plot the hamming distance for each sample. This we'll give us an idea of where MRSA and MSSA samples fall.
+
+```{r fig.width=12, fig.asp=0.4}
+title <- substitute(paste("Hamming distance from ", italic('mecA'), " for ", n, " samples."), list(n=format(nrow(meca_hamming), big.mark=',', scientific=FALSE)))
+p <- ggplot(data=meca_hamming, aes(x=total_hamming)) +
+    xlab("Hamming Distance") +
+    ylab("Frequency") +
+    ggtitle(title) +
+    geom_histogram(binwidth=1) +
+    scale_x_continuous(breaks = round(seq(min(meca_hamming$total_hamming), max(meca_hamming$total_hamming), by = 2),1)) +
+    theme_bw() +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=14,face="bold"))
+p
+
+```
+
+In this case we, we can use a hamming distance of 0 to say a sample is *MRSA*. In other words, these samples have perfect matches to the primers that would be used to identify *mecA*.
+
+#### Determine MRSA or MSSA Based On Hamming Distance
+We are going to add another column to our *meca_hamming* data frame. We'll call this calumn *status* in which case the options will be *MRSA* or *MSSA*.
+
+```{r}
+meca_hamming$status <- ifelse(meca_hamming$total_hamming == 0, 'MRSA', 'MSSA')
+table(meca_hamming$status)
+```
+
+### Visualize MRSA/MSSA Prediction By Sequence Type
+Our next step is to visualize the MRSA/MSSA prediction group by sequence types.
+
+#### Determine MRSA/MSSA Counts By Sequence Type
+First we'll join our *samples* and *meca_hamming* data frames. This will allow us to futher filter by *st*.
+
+```{r}
+samples_meca <- merge(meca_hamming, samples, by='sample_id')
+head(samples_meca)
+```
+
+Our next step is to get the counts of MRSA/MSSA by *st*. We'll do this by using the *count* function from *plyr*. Since we imported *dplyr* earlier and it also has a *count* function, I am explicitly telling R to use the *count* function from *plyr* by using *plyr::count()*.
+
+```{r}
+meca_by_st <- plyr::count(data.frame(st=samples_meca$st, status=samples_meca$status), c('st', 'status'))
+head(meca_by_st)
+```
+
+Now we have three columns:
+
+1. st: The sample's sequence type
+2. status: Either MRSA or MSSA
+3. freq: The counts for MRSA or MSSA per st
+
+#### Get the Top 10 STs
+Being that over 1,000 STs are represented in Staphopia, we are going to limit our plots to only the top 10 STs. In order to retrieve the top sequence types we'll need to use the **get_top_sequence_types()** function.
+
+```{r}
+top_st <- get_top_sequence_types()
+top_st
+```
+
+Next we'll take our samples that have a ST from these top 10.
+
+```{r}
+top_st_meca <- merge(top_st, meca_by_st, by='st')
+nrow(top_st_meca)
+```
+
+#### Finally, Plot!
+Now we are ready to plot out the distribution of MRSA and MSSA predictions by sequence type.
+
+```{r fig.width=12, fig.asp=0.4}
+title <- substitute(paste("MRSA (N = ", mrsa, ") and MSSA (N = ", mssa, ") predicted for publicly available ", italic('S. aureus')," samples, top 10 sequence types are represented."), list(
+    mrsa=format(nrow(meca_hamming[meca_hamming$status == 'MRSA',]), big.mark=',', scientific=FALSE),
+    mssa=format(nrow(meca_hamming[meca_hamming$status == 'MSSA',]), big.mark=',', scientific=FALSE)
+))
+
+p <- ggplot(data=top_st_meca, aes(x=reorder(st, -count), y=freq, fill = status)) +
+    xlab("Sequence Type") +
+    ylab("MRSA/MSSA Counts Per ST") +
+    ggtitle(title) +
+    geom_bar(stat="identity", position = "dodge") +
+    geom_text(aes(label=freq), vjust = -0.5, position = position_dodge(.9)) + 
+    scale_fill_manual(values=c("#2ca25f", "#5ab4ac")) +
+    theme_bw() +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=14,face="bold"),
+          legend.title = element_blank())
+p
+
+```
+

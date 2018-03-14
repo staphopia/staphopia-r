@@ -97,7 +97,11 @@ submit_get_request <- function(request){
             }
 
             if (is.not.null(json_data$count)) {
-                return(json_data$results)
+                if (json_data$count == 0) {
+                    print(json_data$message)
+                } else {
+                    return(json_data$results)
+                }
             } else {
                 return(json_data)
             }
@@ -105,7 +109,6 @@ submit_get_request <- function(request){
     } else {
         warning(TOKEN_MISSING)
     }
-
 }
 
 #' submit_paginated_request
