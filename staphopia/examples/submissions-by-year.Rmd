@@ -24,7 +24,7 @@ results <- get_submission_by_year()
 results
 ```
 
-In the table above, there are three columns:
+In the table above, there are seven columns:
 
 1. year: The year in which an experiment was made public in ENA/SRA
 2. published: The number of submissions associated with a publication for a given year
