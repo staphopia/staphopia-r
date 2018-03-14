@@ -1,0 +1,39 @@
+---
+title: "Antibiotic Resistance based on ARIBA output"
+output: html_notebook
+---
+
+Ariba output was generated using the [MegaRes](https://megares.meglab.org) database for comparison.
+
+```{r}
+library(staphopia)
+library(dplyr)
+```
+
+switch to dev version.  ignore when the database is moved to new version.
+```{r}
+USE_DEV = TRUE
+```
+
+Get table of all public samples - takes a minute or so.  There are 43972 samples.
+```{r}
+ps <- get_public_samples()
+```
+
+Create a mega-table of all ARIBA output for every sample.
+```{r}
+start.time <- Sys.time()
+ariba_tab <- get_resistance_results(ps$sample_id)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
+```
+This is the raw [ARIBA report file output](https://github.com/sanger-pathogens/ariba/wiki/Task:-run)
+
+
+
+
+```{r}
+sessionInfo()
+```
+

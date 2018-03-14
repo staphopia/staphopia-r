@@ -1,0 +1,46 @@
+---
+title: "Different ways to call MRSA in Staphopia"
+output: html_notebook
+---
+
+Comparing the different ways that a strain can be called MRSA.  These include:
+* Based on the precomputed resulting of the SCCmec typing set (based on Blast matches to assembled contigs)
+* Blast matches assembled contigs to mecA specific primers
+* Blast matches of assembled contigs to SCCmec proteins
+* mecA hits in ARIBA data (uses unassembled FASTQ as data)
+* Presence of mecA in annotated gene set
+
+
+```{r}
+library(staphopia)
+library(dplyr)
+```
+
+switch to dev version.  ignore when the database is moved to new version.
+```{r}
+USE_DEV = TRUE
+```
+
+Get table of all public samples - takes a minute or so.  There are 43972 samples.
+```{r}
+ps <- get_public_samples()
+```
+
+## 1. Based on pre-computed SCCmec types (these rely on perfect matches to all typing primers). 
+
+
+```{r}
+sccmec_types <- get_sccmec_type(ps$sample_id)
+# the SCCmec types also include a colum "mecA" for whether there is a strong match to mecA primers alone
+sccmec_types$MRSA_method1 <-  rowSums(sccmec_types[,3:13])
+sccmec_st <- inner_join(ps,sccmec_types, by = "sample_id") %>%
+  select(sample_id,st,meca,MRSA_method1)
+```
+
+Note - in the minority of cases there are 2 or more SCCmec types called.  This shows some of the ambiguity in primer-based SCCmec typing.
+
+
+```{r}
+sessionInfo()
+```
+
