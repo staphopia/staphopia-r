@@ -102,3 +102,10 @@ p <- ggplot(data=melted, aes(x=year, y=value, fill=title)) +
 
 p
 ```
+
+
+
+```{r}
+sessionInfo()
+```
+

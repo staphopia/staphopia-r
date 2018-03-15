@@ -66,3 +66,7 @@ p <- ggplot(data=results, aes(x=reorder(st, -count), y=count)) +
           axis.title=element_text(size=14,face="bold"))
 p
 ```
+
+```{r}
+sessionInfo()
+```

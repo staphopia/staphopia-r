@@ -22,6 +22,30 @@ get_sequence_type <- function(sample_id) {
     }
 }
 
+#' get_mlst_blast_results
+#'
+#' Retrieve MLST BLAST results for a given sample(s).
+#'
+#' @param sample_id An integer sample ID
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_mlst_blast_results(500)
+#' get_mlst_blast_results(c(500,501))
+get_mlst_blast_results <- function(sample_id) {
+    if (is_single_id(sample_id)) {
+        request <- paste0('/sample/', format_id(sample_id), '/st_blast/')
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(sample_id)) {
+        request <- paste0('/mlst/blast_by_sample/')
+        return(submit_post_request(request, sample_id, chunk_size=1000))
+    } else {
+        warning('sample_id is not the expected type (integer(s) or double(s))')
+    }
+}
+
 
 #' get_cgmlst
 #'

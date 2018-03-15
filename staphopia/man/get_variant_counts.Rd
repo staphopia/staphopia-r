@@ -4,18 +4,18 @@
 \alias{get_variant_counts}
 \title{get_variant_counts}
 \usage{
-get_variant_counts(ids = FALSE, is_annotation = FALSE)
+get_variant_counts(sample_id)
 }
 \arguments{
-\item{ids}{A vector of positions or Annotation IDs}
+\item{sample_id}{A vector of Sample IDs}
 }
 \value{
 Parsed JSON response.
 }
 \description{
-Given a list of positions or annotation ids return SNP/InDel counts.
+Given a list of Sample IDs return SNP/InDel counts.
 }
 \examples{
-get_variant_counts(c(1,2,3))
-get_variant_counts(c(1,2,3), is_annotation = TRUE)
+get_variant_counts(500)
+get_variant_counts(c(500,5002,4003))
 }
