@@ -1,9 +1,7 @@
 ---
 title: "Public Submissions By Year"
-output: 
-  html_notebook: 
-    fig_height: 6
-    fig_width: 12
+output:
+  pdf_document: default
 ---
 
 This is a quick example on generating plots of the publicly available *Staphylococcus aureus* sequencing data by year.
@@ -14,6 +12,7 @@ This is a quick example on generating plots of the publicly available *Staphyloc
 library(staphopia)
 library(ggplot2)
 library(reshape2)
+USE_DEV = TRUE
 ```
 
 ### Get Our Data
@@ -41,7 +40,9 @@ We'll use *ggplot2* to make two simple plots to visualize our data.
 Here we are just going to look at the per year submissions.
 
 ```{r fig.width=12, fig.asp=0.4}
-title <- substitute(paste("Per year (2010-present) total of publicly available sequenced ", italic('S. aureus')," samples (N = ", x,")."), list(x=format(max(results$overall), big.mark=',', scientific=FALSE)))
+title <- substitute(paste("Per year (2010-present) total of publicly available sequenced ",
+                          italic('S. aureus')," samples (N = ", x,")."),
+                    list(x=format(max(results$overall), big.mark=',', scientific=FALSE)))
 p <- ggplot(data=results, aes(x=year, y=count)) +
     xlab("Year") +
     ylab("Total Submitted Samples Per Year") +
@@ -60,7 +61,9 @@ p
 Changing gears a litte, here we are going to look at the overall growth of *S. aureus* sequencing data over the years.
 
 ```{r fig.width=12, fig.asp=0.4}
-title <- substitute(paste("Cumulative total of publicly available sequenced ", italic('S. aureus')," samples (N = ", x,") by year (2010-present)."), list(x=format(max(results$overall), big.mark=',', scientific=FALSE)))
+title <- substitute(paste("Cumulative total of publicly available sequenced ",
+                          italic('S. aureus')," samples (N = ", x,") by year (2010-present)."),
+                    list(x=format(max(results$overall), big.mark=',', scientific=FALSE)))
 p <- ggplot(data=results, aes(x=year, y=overall)) +
     xlab("Year") +
     ylab("Cumulative Submitted Samples") +
@@ -77,14 +80,17 @@ p
 #### Published vs Unpublished By Year
 For our final plot, we'll look at the number of samples that were referenced in a publication along side those that weren't. We'll need to melt the data in order to plot our groups.
 ```{r fig.width=12, fig.asp=0.5}
-melted <- melt(results, id=c('year'), measure.vars = c('published', 'unpublished'))
+melted <- melt(results, id=c('year'),
+               measure.vars = c('published', 'unpublished'))
 melted$title <- ifelse(melted$variable == 'published', 'Published', 'Unpublished')
 
-title <- substitute(paste("Published (N = ", p, ") and unpubished (N = ", u, ") publicly available ", italic('S. aureus')," samples between ", min_year, " and ", max_year, "."), list(
-    p=format(max(results$overall_published), big.mark=',', scientific=FALSE),
-    u=format(max(results$overall_unpublished), big.mark=',', scientific=FALSE),
-    min_year=min(results$year),
-    max_year=max(results$year)
+title <- substitute(paste("Published (N = ", p, ") and unpubished (N = ", u, ") publicly available ",
+                          italic('S. aureus')," samples between ", min_year, " and ", max_year, "."), 
+    list(
+        p=format(max(results$overall_published), big.mark=',', scientific=FALSE),
+        u=format(max(results$overall_unpublished), big.mark=',', scientific=FALSE),
+        min_year=min(results$year),
+        max_year=max(results$year)
 ))
 p <- ggplot(data=melted, aes(x=year, y=value, fill=title)) +
     xlab("Year") +

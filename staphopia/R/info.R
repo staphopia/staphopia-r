@@ -50,3 +50,42 @@ get_top_sequence_types <- function(total=10) {
 get_submission_by_year <- function() {
     return(submit_get_request('/info/submission_by_year/'))
 }
+
+#' get_rank_by_year
+#'
+#' Retrieve the rank (Gold Silver Bronze) of public submissions by year.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_rank_by_year()
+get_rank_by_year <- function() {
+    return(submit_get_request('/info/rank_by_year/'))
+}
+
+#' get_st_by_year
+#'
+#' Retrieve the sequence type assignments of public submissions by year.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_st_by_year()
+get_st_by_year <- function() {
+  return(submit_get_request('/info/st_by_year/'))
+}
+
+#' get_public_cgmlst_patterns
+#'
+#' Retrieve the cgMLST pattern counts for public samples.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_public_cgmlst_patterns()
+get_public_cgmlst_patterns <- function() {
+    return(submit_get_request('/info/cgmlst_patterns/'))
+}
