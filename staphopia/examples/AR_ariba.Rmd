@@ -77,6 +77,20 @@ tet_res <- ps %>%
   mutate(tetracycline = ifelse(sample_id %in% tet_hits$sample_id,"resistant","sensitive"))
 ```
 
+Get top sequence types
+
+```{r}
+tst <- get_top_sequence_types()
+```
+
+Make summary of tet resistance
+
+```{r}
+tet_summary <- group_by(tet_res,st,tetracyline) %>%
+  summarise(count = sum(tetracycline))
+```
+
+
 ## Beta Lactam resistance
 
 
