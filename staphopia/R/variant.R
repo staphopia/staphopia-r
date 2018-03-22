@@ -212,6 +212,30 @@ get_variant_gene_sequence <- function(sample_ids, annotation_ids, chunk_size=5, 
 
 #' get_variant_counts
 #'
+#' Given a list of Sample IDs return SNP/InDel counts.
+#'
+#' @param sample_id A vector of Sample IDs
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_variant_counts(500)
+#' get_variant_counts(c(500,5002,4003))
+get_variant_counts <- function(sample_id) {
+    if (is_single_id(sample_id)) {
+        request <- paste0('/sample/', format_id(sample_id), '/variant_count/')
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(sample_id)) {
+        request <- '/variant/counts_in_bulk/'
+        return(submit_post_request(request, sample_id, chunk_size=1000))
+    } else {
+        warning('sample_id is not the expected type (integer(s) or double(s))')
+    }
+}
+
+#' get_variant_count_by_position
+#'
 #' Given a list of positions or annotation ids return SNP/InDel counts.
 #'
 #' @param ids A vector of positions or Annotation IDs
@@ -220,9 +244,9 @@ get_variant_gene_sequence <- function(sample_ids, annotation_ids, chunk_size=5, 
 #' @export
 #'
 #' @examples
-#' get_variant_counts(c(1,2,3))
-#' get_variant_counts(c(1,2,3), is_annotation = TRUE)
-get_variant_counts <- function(ids = FALSE, is_annotation = FALSE) {
+#' get_variant_count_by_position(c(1,2,3))
+#' get_variant_count_by_position(c(1,2,3), is_annotation = TRUE)
+get_variant_count_by_position <- function(ids = FALSE, is_annotation = FALSE) {
     request <- FALSE
     if (is_single_id(ids)) {
         if (is_annotation == TRUE) {
@@ -242,4 +266,3 @@ get_variant_counts <- function(ids = FALSE, is_annotation = FALSE) {
         warning('ids is not the expected type (integer(s) or double(s))')
     }
 }
-
