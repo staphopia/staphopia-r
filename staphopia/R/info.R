@@ -89,3 +89,17 @@ get_st_by_year <- function() {
 get_public_cgmlst_patterns <- function() {
     return(submit_get_request('/info/cgmlst_patterns/'))
 }
+
+
+#' get_publication_links
+#'
+#' Retrieve counts for how public samples were linked to publications.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_publication_links()
+get_publication_links <- function() {
+    return(submit_get_request('/info/publication_links/'))
+}

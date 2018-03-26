@@ -4,7 +4,8 @@
 \alias{get_sccmec_subtype_hits}
 \title{get_sccmec_subtype_hits}
 \usage{
-get_sccmec_subtype_hits(sample_id, exact_hits = FALSE, predict = FALSE)
+get_sccmec_subtype_hits(sample_id, exact_hits = FALSE, predict = FALSE,
+  hamming = FALSE)
 }
 \arguments{
 \item{sample_id}{An integer sample ID, or vector of sample IDs}
@@ -12,6 +13,8 @@ get_sccmec_subtype_hits(sample_id, exact_hits = FALSE, predict = FALSE)
 \item{exact_hits}{Return only those hits that are an exact match. BOOL (Default FALSE)}
 
 \item{predict}{Return a predicted SCCmec sub-type based on primer hits. BOOL (Default FALSE)}
+
+\item{hamming}{Return a hamming distance per SCCmec type based on primer hits. BOOL (Default FALSE)}
 }
 \value{
 Parsed JSON response.

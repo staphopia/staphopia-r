@@ -4,7 +4,7 @@
 \alias{get_sccmec_type}
 \title{get_sccmec_type}
 \usage{
-get_sccmec_type(sample_id)
+get_sccmec_type(sample_id, hamming = FALSE)
 }
 \arguments{
 \item{sample_id}{An integer sample ID}
