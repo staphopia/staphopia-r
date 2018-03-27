@@ -8,7 +8,7 @@
 #' @examples
 #' get_all_tags()
 get_all_tags <- function() {
-    return(submit_get_request('/tag/r'))
+    return(submit_get_request('/tag/'))
 }
 
 
