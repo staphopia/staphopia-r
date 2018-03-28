@@ -28,3 +28,36 @@ get_genes <- function(sample_id, product_id=FALSE) {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
 }
+
+
+#' get_gene_products
+#'
+#' Retrieve a single gene product, gene products associated with a term, or
+#' all gene products in Staphopia
+#'
+#' @param query An interger, query string or empty value.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_gene_products()
+#' get_gene_products('meca')
+#' get_gene_products(5:50)
+get_gene_products <- function(query=NULL) {
+    if (is.null(query)) {
+        request <- paste0('/annotation/inference/bulk/')
+        return(submit_get_request(request))
+    } else if (is.character(query)) {
+        request <- paste0('/annotation/inference/?term=', query)
+        return(submit_get_request(request))
+    } else {
+        if (is_single_id(query)) {
+            request <- paste0('/annotation/inference/', format_id(query), '/')
+            return(submit_get_request(request))
+        } else if (is_multiple_ids(query)) {
+            request <- paste0('/annotation/inference/bulk_by_product/')
+            return(submit_post_request(request, query, chunk_size=500))
+        }
+    }
+}
