@@ -4,10 +4,17 @@
 \alias{get_resistance_results}
 \title{get_resistance_results}
 \usage{
-get_resistance_results(sample_id)
+get_resistance_results(sample_id, summary = FALSE,
+  resistance_report = FALSE, cluster_report = FALSE)
 }
 \arguments{
 \item{sample_id}{An integer sample ID, or vector of sample IDs}
+
+\item{summary}{A boolean to return a summary of the ariba results}
+
+\item{resistance_report}{A boolean to return a resistance report based on Ariba summary}
+
+\item{cluster_report}{A boolean to return a cluster report based on Ariba summary}
 }
 \value{
 Parsed JSON response.
