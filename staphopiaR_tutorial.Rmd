@@ -6,16 +6,21 @@ output:
     theme: united
 ---
 
+## Prerequisites
 
-Load libraries used in this tutorial (you may have to download and install.
+Install staphopia-r and test as described [here](https://github.com/staphopia/staphopia-r). You may choose to create a token for the staphopia API but the tutorial below is restricted to a small number of samples that can be accessed without an account.
 
-```{r}
+Load libraries used in this tutorial (you may have to install first).
+
+```{r message=FALSE}
 library(staphopia)
 library(dplyr)
+library(ggplot2)
 library(Biostrings)
-library(phangorn)
-library(purrr)
-library(ape)
+library(phangorn) # check still use
+library(purrr) # check still use
+library(ape) # check still use
+library(assertthat)
 ```
 
 ## Creating a sample set
@@ -73,16 +78,45 @@ barplot(graR_SNP_Counts, main = "graR SNP distribution")
 ```
 ## Genes and contigs (unfinished)
 
-Genes are predicted on de novo assembled contigs using PROKKA. Each annotated function is associated with a 'product_id'.  ```get_gene_products`` pulls a list of all products.  These can be searched for text matches.
+Genes are predicted on de novo assembled contigs using PROKKA. Each annotated function is associated with a 'product_id'.  ```get_gene_products`` pulls a list of all products.  
 ```{r}
 gp <- get_gene_products()
+head(gp)
 ```
 
+This can also be used to search directly for text matches, using the ```query``` modifier.
+
+```{r}
+get_gene_products(query = "mecA")
+```
+mecA is product_id 2281.  The "inference" column is the NCBI protein id of the target used by PROKAA to make the funcional identification.
+
+This information can be used to pull down information about mecA genes in the public50 set.
 
 ```{r}
 #
-prod33 <- get_genes(23942,product_id=1)
+public50_mecA_genes <- get_genes(public50$sample_id,product_id=2281)
+public50_mecA_genes
+```
 
+The "locus_tag" uses the sample_name to create a unique identifier for the genes. The start and the end are the coordinates on the contig with the sample.  The DNA and protein sequence of the gene and gene_product are also available.
+
+A stringset of the genes can be created using the Bioconductor Biostrings pakage.
+```{r}
+mecA_stringset <- DNAStringSet(public50_mecA_genes$dna)
+names(mecA_stringset) <- public50_mecA_genes$locus_tag
+mecA_stringset
+```
+Note that some of these genes have been truncated, probably by contig gaps.
+
+Here is a quick and dirty way to plot the relationships of the full_length sequences (length = 2007 nt).  Note the tree formatting will require some attention to avoid label overlaps .
+
+```{r}
+mecA_stringset2 <- mecA_stringset[width(mecA_stringset) == 2007]
+mecA_bin <- as.DNAbin(mecA_stringset2)
+dm <- dist.dna(mecA_bin)
+njtree <- nj(dm)
+plot(njtree,show.tip.label = T, cex = 0.5, type = 'unrooted')
 ```
 
 
@@ -97,27 +131,6 @@ head(contigs450)
 
 
 
-
-create stringset
-```{r}
-IS256_out <- DNAStringSet(IS256$dna)
-names(IS256_out) <- paste(IS256$sample_id,IS256$id,sep = "_")
-IS256_out <- IS256_out[width(IS256_out)==1173]
-```
-
-phylogeny/ heat map
-
-```{r}
-IS256_bin <- as.DNAbin(IS256_out)
-dm <- dist.dna(IS256_bin)
-no_SNps <- as.matrix(as.integer(dm*1173))
-hist(no_SNps)
-njtree <- nj(dm)
-temp <- as.matrix(dm)
-heatmap(temp,cexRow = 0.2, cexCol = 0.2)
-njtree <- midpoint(njtree)
-plot(njtree,show.tip.label = T, cex = 0.5)
-```
 
 ## Writing sequence data to hard drive
 
@@ -168,10 +181,50 @@ sum(contigs4065_filtered$length)
 ```
 
 
-## Antibiotic resistance
+## Antibiotic resistance (unfinished)
+
+Can get more information about the data underlying these calls through ```get_resistance_results```.
+```{r}
+public50_res <- get_resistance_results(public50$sample_id)
+head(public50_res)
+```
+This is the raw [ARIBA report file output](https://github.com/sanger-pathogens/ariba/wiki/Task:-run)
+
+### Looking at tetracycline resistance clusters 
+
+```{r}
+public50_tet <- filter(public50_res,resistance_class_id == 10) %>%
+  group_by(sample_id,cluster) %>%
+  summarise(tot_reads = sum(as.integer(reads)))
+head(public50_tet)  
+```
+
+This dataframe is the number of reads mapped to each tetracycline resistance mechanism annotated in MegaRes for each sample. This allows an exploratory dotplot of read numbers versus cluster types across the strains.  Shows that some genes have high coverage - prob a feature of plasmid carriage
+
+```{r}
+bp <- ggplot(public50_tet,aes(x=cluster,y=tot_reads)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + scale_y_log10()
+bp
+```
+
+### Looking at beta Lactam resistance mechanisms
 
 
-## SCCmec
+```{r}
+pulic50_bla <- filter(public50_res,resistance_class_id == 13) %>%
+  group_by(sample_id,mechanism) %>%
+  summarise(tot_reads = sum(as.integer(reads)))
+  
+```
+
+Visualization of reads assigned to each mechanism across the samples
+
+
+```{r}
+bp2 <- ggplot(pulic50_bla,aes(x=mechanism,y=tot_reads)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + scale_y_log10()
+bp2
+```
+
+## SCCmec (unfinished)
 
 This section is a test for storing BLASTN, TBLASTN and reference mapped sequences toward examing specific features of *S. aureus* genetics.  In this case, the SCCmec mobile cassettes  responsible for MRSA.
 
@@ -218,7 +271,15 @@ public50_sccmec %>% select(sample_id,meca,n)
 We can use Staphopia, to get the BLAST hits associated with the primers to determine the SCCmec type (if applicable) for each of our demo samples. Using the ```get_sccmec_primer_hits()``` function we can get a look at which primers were found in each sample.
 
 
-## Virulence genes
+## Virulence genes (unfinished)
+
+Similar to resistance, we used Ariba to run te samples against the [VFDB](http://www.mgc.ac.cn/VFs/main.htm)
+
+```{r}
+public50_vir <- get_virulence_results(public50$sample_id)
+head(public50_vir)
+```
+
 
 ## Rapid core genome trees
 
@@ -252,10 +313,9 @@ The column and row names are the sample_ids.  The values are the number Hamming 
 
 ## Quality control assertions
 
-The Staphopia database and R package are being tweaked constantly.  If any of these assertions returns false it means that there may have been some subtle changes that may affect the results in the tutorial.
+The Staphopia database and R package are being tweaked frequently.  If any of these assertions returns false it means that there may have been some subtle changes that may affect the results in the tutorial.
 
 ```{r}
-library(assertthat)
 see_if(public50$sample_id[1] == 23942, msg = "public-50 samples changed")
 see_if(ncol(public50) == 6, msg = "public-50 columns ne 6")
 
