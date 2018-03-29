@@ -89,23 +89,6 @@ get_variant_annotation <- function(id=NULL, locus_tag=NULL) {
 }
 
 
-#' get_snps_in_bulk
-#'
-#' Given a list of SNP IDs return information about each SNP.
-#'
-#' @param snp_ids A vector of sample IDs
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_snps_in_bulk(c(5000,5001,5002))
-get_snps_in_bulk <- function(snp_ids) {
-    unique_snps <- unique(snp_ids)
-    request <- '/variant/snp/bulk/'
-    return(submit_post_request(request, unique_snps, chunk_size=5000))
-}
-
 #' create_snp_matrix
 #'
 #' Given a data frame with 'sample_id' and 'snp_id' return an SNP matrix that
