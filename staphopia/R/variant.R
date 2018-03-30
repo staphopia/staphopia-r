@@ -41,11 +41,16 @@ get_indels <- function(sample_id, annotation_id = NULL) {
 #' @examples
 #' get_snps(500)
 #' get_snps(c(500,501))
-get_snps <- function(sample_id, annotation_id=NULL) {
+get_snps <- function(sample_id, annotation_id=NULL, start=NULL, end=NULL) {
     q = ""
     if (is.not.null(annotation_id)) {
-        q = paste0("?annotation_id=", annotation_id)
+      q = paste0("?annotation_id=", annotation_id)
+    } else if (is.not.null(start) & is.not.null(end)) {
+      q = paste0('?start=', min(start, end), '&end=', max(start, end))
+    } else if (is.not.null(start) | is.not.null(end)) {
+        warning('"start" and "end" options must be used together, getting all snps.')
     }
+
     if (is_single_id(sample_id)) {
         request <- paste0('/sample/', format_id(sample_id), '/snps/', q)
         return(submit_get_request(request))

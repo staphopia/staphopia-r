@@ -4,7 +4,7 @@
 \alias{get_snps}
 \title{get_snps}
 \usage{
-get_snps(sample_id, annotation_id = NULL)
+get_snps(sample_id, annotation_id = NULL, start = NULL, end = NULL)
 }
 \arguments{
 \item{sample_id}{An integer sample ID, or vector of sample IDs}
