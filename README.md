@@ -19,7 +19,7 @@ Install and test staphopia-r from github (running the test might take 1-2 min)
   ```
   install_github("staphopia/staphopia-r/staphopia")
   library("staphopia")
-  testthat::test_package("staphopia")
+  test_staphopia()
   ```
   
  ## Create user_name and get authenication token
