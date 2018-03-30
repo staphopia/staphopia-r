@@ -4,12 +4,14 @@
 \alias{get_assembly_contigs}
 \title{get_assembly_contigs}
 \usage{
-get_assembly_contigs(sample_id, plasmids = FALSE)
+get_assembly_contigs(sample_id, plasmids = FALSE, contig = FALSE)
 }
 \arguments{
 \item{sample_id}{An integer sample ID}
 
 \item{plasmids}{Return plasmid stats. BOOL (Default FALSE)}
+
+\item{contig}{An integer representing a single contig (used by get_genes())}
 }
 \value{
 Parsed JSON response.
@@ -20,5 +22,6 @@ Retrieve all assembled contigs for a given sample(s).
 \examples{
 get_assembly_contigs(500)
 get_assembly_contigs(500, plasmids=TRUE)
+get_assembly_contigs(500, contig=1)
 get_assembly_contigs(c(500, 1000, 1500))
 }
