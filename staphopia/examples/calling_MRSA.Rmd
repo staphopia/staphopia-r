@@ -14,6 +14,8 @@ Comparing the different ways that a strain can be called MRSA.  These include:
 ```{r}
 library(staphopia)
 library(dplyr)
+library(ggplot2)
+library(feather)
 ```
 
 switch to dev version.  ignore when the database is moved to new version.
@@ -26,18 +28,38 @@ Get table of all public samples - takes a minute or so.  There are 43972 samples
 ps <- get_public_samples()
 ```
 
-## 1. Based on pre-computed SCCmec types (these rely on perfect matches to all typing primers). 
+Get all SCCmecprotein hits
+
+```{r}
+ps_sccmec_pro <- get_sccmec_protein_hits(ps$sample_id) %>%
+  mutate(shorter = gsub("\\|UniRef.+"," ",title)) %>%
+  select(sample_id,shorter,length:align_len)
+```
 
 
 ```{r}
-sccmec_types <- get_sccmec_type(ps$sample_id)
-# the SCCmec types also include a colum "mecA" for whether there is a strong match to mecA primers alone
-sccmec_types$MRSA_method1 <-  rowSums(sccmec_types[,3:13])
-sccmec_st <- inner_join(ps,sccmec_types, by = "sample_id") %>%
-  select(sample_id,st,meca,MRSA_method1)
+max_score <- group_by(ps_sccmec_pro,shorter) %>%
+  summarise(maxscore = max(bitscore))
 ```
 
-Note - in the minority of cases there are 2 or more SCCmec types called.  This shows some of the ambiguity in primer-based SCCmec typing.
+```{r}
+ps_sccmec_pro2 <- inner_join(ps_sccmec_pro,max_score, by = "shorter") %>%
+  mutate(BSR = bitscore/maxscore) %>%
+  filter(BSR > 0.95) %>%
+  filter(grepl("mec|ccr", shorter))
+```
+
+```{r}
+vp <- ggplot(ps_sccmec_pro2, aes(x=shorter)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+```
+
+```{r}
+vp
+```
+
+```{r}
+write_feather(ps_sccmec_pro,"./ps_scc_pro.feather")
+```
 
 
 ```{r}
