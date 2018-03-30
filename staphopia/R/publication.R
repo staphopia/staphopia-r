@@ -22,8 +22,6 @@ get_publications <- function(sample_id) {
     }
 }
 
-
-
 #' get_citations
 #'
 #' Retrieve all publications in a given PubMed ID(s).
