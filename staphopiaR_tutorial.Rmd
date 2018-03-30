@@ -49,33 +49,58 @@ There are alternative methods to get lists of samples - see the *staphopia-r* do
 
 ## Exploring SNPs and Indels (unfinished)
 
-Based on N315 reference genome coordinates
 ```{r}
-graR_SNPs <- get_snps_in_bulk((708245*3):(708919*3))
-rpoB_SNPs <- get_snps_in_bulk((579620*3):(583171*3))
-walK_SNPs <- get_snps_in_bulk((25648*3):(27474*3))
+#get_annotation_table()
+```
+
+
+Based on N315 reference genome coordinates.
+
+```{r}
+#public50_snp_range <- get_snps_in_bulk()
 ```
 
 look at one specific SNP
 ```{r}
-snp2124752 <- get_samples_by_snp(graR_SNPs$id[33])
-pub_sam %>% filter(sample_id %in% snp2124752)
+ #<- get_samples_by_snp()
+#pub_sam %>% filter(sample_id %in% )
 ```
 
-count SNPs
+You can get counts of SNPs across the global set at annotation_id 17
 ```{r}
-graR_SNP_Counts <- map_int(graR_SNPs$id,function(x) length(get_samples_by_snp(x)))   
+ann17_snps <- get_variant_count_by_position(ids = 17, is_annotation = TRUE)
+head(ann17_snps)
 ```
-
-add counts of SNPs to columns
-```{r}
-graR_ <- cbind(graR_SNPs,graR_SNP_Counts) 
-```
+The tables summarizes the number of synonymous and nonsynonymous SNPs at each position and number of times the posiiotn was covered by an indel.
 
 barplot
 ```{r}
-barplot(graR_SNP_Counts, main = "graR SNP distribution")
+# TODO
 ```
+
+
+Get indels for a given sample
+
+```{r}
+indels23942 <- get_indels(public50$sample_id[1])
+head(indels23942)
+```
+These indels were called using the GATC program.   Each indel at a given posiiotn tat inserts of deletes a certain of bases is given a unique id. The columns including and after "AC" are quality metrics specific for this program.  "reference_id" is an internal ID that, in this case, means that the N315 chromosome was used.  
+
+Another way of running this query is to look for all indels in a particular annotation_id across a set of samples.
+
+```{r}
+indels_in_ann274 <- get_indels(public50$sample_id, annotation_id = 274)
+indels_in_ann274
+```
+
+We can query the reverse way.  If we are looking for a particular indel, we can get the strains that have it.  Indel 549 is common in these strains.  if it were of interest we can use this approach.
+
+```{r}
+get_samples_by_indel(549)
+```
+
+
 ## Genes and contigs (unfinished)
 
 Genes are predicted on de novo assembled contigs using PROKKA. Each annotated function is associated with a 'product_id'.  ```get_gene_products`` pulls a list of all products.  
@@ -109,7 +134,7 @@ mecA_stringset
 ```
 Note that some of these genes have been truncated, probably by contig gaps.
 
-Here is a quick and dirty way to plot the relationships of the full_length sequences (length = 2007 nt).  Note the tree formatting will require some attention to avoid label overlaps .
+Here is a quick and dirty way to plot the relationships of the full_length sequences (length = 2007 nt).  Note the neighbor-joining tree formatting will require some attention to avoid label overlaps .
 
 ```{r}
 mecA_stringset2 <- mecA_stringset[width(mecA_stringset) == 2007]
@@ -128,12 +153,24 @@ contigs450_plasmids <- get_assembly_contigs(public50$sample_id[2], plasmids = T)
 head(contigs450)
 ```
 
+<TODO - get_contig>
+```{r}
+get_contig()
+```
 
 
 
 
 ## Writing sequence data to hard drive
+There are 3 functions for writing contigs, plasmid contigs and proteins, respectively from a project to a local fasta_file. These are ```write_contigs_to_fasta```, ```write_plasmids_to_fasta``` and ```write_proteins_to_fasta```.  They all work the same way, with a default of the current locl directory as the apth to download. 
 
+```{r}
+write_contigs_to_fasta(450)
+write_plasmids_to_fasta(450)
+write_proteins_to_fasta(450)
+```
+
+The section above ("Genes and Contigs") illustrated an alternative approach, where sets of DNA contigs, genes and proteins can be used to create a DNAStringSet, which could then be saved using the ```writeXStringSet``` function.
 
 ## Metadata
 
@@ -194,34 +231,35 @@ This is the raw [ARIBA report file output](https://github.com/sanger-pathogens/a
 
 ```{r}
 public50_tet <- filter(public50_res,resistance_class_id == 10) %>%
-  group_by(sample_id,cluster) %>%
-  summarise(tot_reads = sum(as.integer(reads)))
+  select(sample_id,cluster) %>%
+  unique()
 head(public50_tet)  
 ```
 
-This dataframe is the number of reads mapped to each tetracycline resistance mechanism annotated in MegaRes for each sample. This allows an exploratory dotplot of read numbers versus cluster types across the strains.  Shows that some genes have high coverage - prob a feature of plasmid carriage
+This dataframe is the tet clusters types across the strains.  
 
 ```{r}
-bp <- ggplot(public50_tet,aes(x=cluster,y=tot_reads)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + scale_y_log10()
-bp
+barplot(table(public50_tet$cluster))
 ```
+ Note that tet38 is a conserved chromosomal gene, so is present in all strains and thus 
+
+
 
 ### Looking at beta Lactam resistance mechanisms
 
 
 ```{r}
-pulic50_bla <- filter(public50_res,resistance_class_id == 13) %>%
-  group_by(sample_id,mechanism) %>%
-  summarise(tot_reads = sum(as.integer(reads)))
+public50_bla <- filter(public50_res,resistance_class_id == 13) %>%
+  select(sample_id,mechanism) %>%
+  unique()
   
 ```
 
-Visualization of reads assigned to each mechanism across the samples
+Visualization of number of samples with each beta lactam resistance mechanism
 
 
 ```{r}
-bp2 <- ggplot(pulic50_bla,aes(x=mechanism,y=tot_reads)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + scale_y_log10()
-bp2
+barplot(table(public50_bla$mechanism), cex.names= 0.8)
 ```
 
 ## SCCmec (unfinished)
