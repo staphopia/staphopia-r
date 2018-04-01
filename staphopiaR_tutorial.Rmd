@@ -6,6 +6,10 @@ output:
     theme: united
 ---
 
+## About the tutorial
+
+The goal of the tutorial is to preview most of current functions and comment a little on the output.  The basic approach is formulate a query to pull data from the Staphopia API using one of the ```get_``` functions.  The resulting data frame can be processed using various local functions.  Some examamples of downstream processing are described.  The underlying philosophy is to provide, as much as possible, the raw output of many of the prediction programs in the Staphopia pipeline.  This allows to the user to play around with paraemters to customize calling of results. 
+
 ## Prerequisites
 
 Install staphopia-r and test as described [here](https://github.com/staphopia/staphopia-r). You may choose to create a token for the staphopia API but the tutorial below is restricted to a small number of samples that can be accessed without an account.
@@ -34,7 +38,7 @@ tags <- get_all_tags()
 head(tags)
 ```
 
-The result is a list of tag names and matching tag_id.  These are mainly ENA/NCBI project acccessions or PubMed IDs (PMIDs) of publications.  The top results are lists of projects, which have "Gold" standard quality, are avaialble to the public, published and each coming from a different sequence type (ST).   These are test set open to the public without requiring a logon and token.  The '-20', '-50' etc mean 20 and 50 samples, respectively.
+The result is a list of tag names and matching tag_id.  These are mostly ENA/NCBI project acccessions or PubMed IDs (PMIDs) of publications but tags are a way of collecting samples together based on other criteria.  The top results from ```get_samples_by_tag``` are lists of projects that have "Gold" standard quality, are avaialble to the public, published with each coming from a different sequence type (ST).   These are test set open to the public without requiring a logon and token.  The '-20', '-50' etc mean 20 and 50 samples, respectively.
 
 These samples can be accessed by ```get_samples_by_tag```.
 ```{r}
@@ -47,7 +51,9 @@ The six columns are the internal staphopia sample_id; the name (generally, NCBI 
 There are alternative methods to get lists of samples - see the *staphopia-r* documentation. Some examples are: ```get_public_samples```, which returns all public sampes and  ```get_samples_by_name```, which searches sample names by a text string. These generally require a staphopia account/token.  Pulling large numbers of samples can slow down analysis.
 
 
-## Exploring SNPs and Indels (unfinished)
+## Exploring SNPs and Indels 
+
+Coming soon is an annotation table with links N315 gene name with its own annotation_id linked to the more global 'product_id' - see [Genes and Contigs].  The table will also have the N315 coordinates.
 
 ```{r}
 #get_annotation_table()  TODO
@@ -75,7 +81,7 @@ get_samples_by_snp(62405)
 
 ```
 
-You can get counts of SNPs across the global set at annotation_id 17
+You can get counts of SNPs across the global set at a particular annotation_id or range, in this case annotation_id = 17
 ```{r}
 ann17_snps <- get_variant_count_by_position(ids = 17, is_annotation = TRUE)
 head(ann17_snps)
@@ -112,7 +118,7 @@ get_samples_by_indel(549)
 
 ## Genes and contigs 
 
-Genes are predicted on de novo assembled contigs using PROKKA. Each annotated function is associated with a 'product_id'.  ```get_gene_products`` pulls a list of all products.  
+Genes are predicted on de novo assembled contigs using PROKKA. Each annotated function is associated with a 'product_id'.  ```get_gene_products``` pulls a list of all products.  
 ```{r}
 gp <- get_gene_products()
 head(gp)
@@ -165,7 +171,7 @@ There are 138 features (CDS, mRNA etc) on this contig.
 
 *<TODO - genoplotr graph>*
 
-```get_assembly_contigs`` returns a list of the raw de novo assembled contig data for either assemblies marker as "plasmids" by SPAdes or not.  Columns give basic information and sequence as raw text.  Only contigs > 200 bp were from the de novo are stored in the database.  The header is the description in the fasta file if downloaded.  The first part is the <sample_id>|<ENA accession>|<contig number>  The contig number starts at 1 and counts up for each sample.
+```get_assembly_contigs``` returns a list of the raw de novo assembled contig data for either assemblies marker as "plasmids" by SPAdes or not.  Columns give basic information and sequence as raw text.  Only contigs > 200 bp were from the de novo are stored in the database.  The header is the description in the fasta file if downloaded.  The first part is the <sample_id>|<ENA accession>|<contig number>  The contig number starts at 1 and counts up for each sample.
 
 ```{r}
 contigs450 <- get_assembly_contigs(public50$sample_id[2], plasmids = F)
@@ -206,13 +212,12 @@ get_citations(26969225)
 
 Stats on the sequence quality of the samples at different stages of procesing are avialble using ```get_sequence_quality```.
 
-
 ```{r}
 public50_qual <- get_sequence_quality(public50$sample_id)
 head(public50_qual)
 ```
- For each project there should be 4 rows, representing the original data (downloaded from ENA), then after the adapter removal, after error correction by SPAdes (ecc) and then after the final cleanup to remove any short and/or low quality reads. 
 
+For each project there should be 4 rows, representing the original data (downloaded from ENA), then after the adapter removal, after error correction by SPAdes (ecc) and then after the final cleanup to remove any short and/or low quality reads. 
 
 You can get a snapshot of the assembly metrics for each sample using ```get_assembly_stats```.
 
@@ -235,7 +240,6 @@ contigs4065_filtered <-  contigs4065 %>%
 nrow(contigs4065_filtered)
 sum(contigs4065_filtered$length)
 ```
-
 
 ## Antibiotic resistance 
 
@@ -281,9 +285,9 @@ Visualization of number of samples with each beta lactam resistance mechanism
 barplot(table(public50_bla$mechanism), cex.names= 0.8)
 ```
 
-## SCCmec (unfinished)
+## SCCmec 
 
-SCCmec  is a test for storing BLASTN and TBLASTN resuls toward examing specific features of *S. aureus* genetics.  In this case, the SCCmec mobile cassettes  responsible for MRSA.
+SCCmec  is a test for storing BLASTN and TBLASTN resuls toward examing specific features of *S. aureus* genetics.  In this case, the SCCmec mobile cassettes  responsible for MRSA.  We have a preliminary set of tables from BLAST typing primers and protiens.
 
 ### SCCmec background
 
@@ -313,7 +317,7 @@ public50_sccmec <- get_sccmec_type(public50$sample_id)
 head(public50_sccmec)
 ```
 
-The table shows whether the sample was typed as SCCmec I-XI and a 'mecA' column additionally reports whether specifically the mecA gene primers matched, as would be expected for a MRSA strain.  There are some problems with the summary.  Some MRSA+ strains dont have a SCCmec type and some samples have multiple MRSA types.
+This is a work in progress.  We are not attempting to type classes X-XIII currently. The table shows whether the sample was typed as SCCmec I-IX and a 'mecA' column additionally reports whether specifically the mecA gene primers matched, as would be expected for a MRSA strain.  You can see that some MRSA+ strains dont have a SCCmec type and some samples have multiple MRSA types.
 
 
 ```{r}
@@ -322,41 +326,39 @@ public50_sccmec$n <- n
 public50_sccmec %>% select(sample_id,meca,n)
 ```
 
-
+This typing is based only on the primer BLAST results at hte moment.  Using the ```get_sccmec_primer_hits()``` function we can get a look at which primers were found in each sample.
 
 ```{r}
 public50_sccmec_primers <- get_sccmec_primer_hits(public50$sample_id)
 head(public50_sccmec_primers)
 ```
-```{r}
+One useful metric to gauge the strength of the hit is Hamming distance - the number of changes between the query primer and the match.  A violin plot gives a look at the distribution of the those values across the sample.  This could be used to hel setting cutoffs.
 
+```{r}
+sccmec_pplot2 <- ggplot(public50_sccmec_primers, aes(x=title, y=hamming_distance)) + geom_violin() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+sccmec_pplot2
 ```
 
-
-
+Its also useful to look at the protein tBLAST hits.  In this output, a new field called "shorter"" is created with an abbreviated protein name.
 
 ```{r}
-public50_sccmec_proteins <- get_sccmec_protein_hits(public50$sample_id)
+public50_sccmec_proteins <- get_sccmec_protein_hits(public50$sample_id) %>%
+  mutate(shorter = gsub("\\|UniRef.+"," ",title)) 
 head(public50_sccmec_proteins)
 ```
 
+You canmake make a summary of the likely strong hits (in this case, mismatch + gaps less than 20 and plot)
 
 ```{r}
-public50_sccmec_proteins %>% filter(sample_id == 1185)
+public50_sccmec_proteins_filtered <- public50_sccmec_proteins %>%
+  filter(mismatch + gaps < 40)
+sccmec_pplot <- ggplot(public50_sccmec_proteins_filtered, aes(x=shorter)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+sccmec_pplot
 ```
-
-
-
-
-*< TODO to be continued>*
-
-
-We can use Staphopia, to get the BLAST hits associated with the primers to determine the SCCmec type (if applicable) for each of our demo samples. Using the ```get_sccmec_primer_hits()``` function we can get a look at which primers were found in each sample.
-
 
 ## Virulence genes 
 
-Similar to resistance, we used Ariba to run te samples against the [VFDB](http://www.mgc.ac.cn/VFs/main.htm)
+Similar to resistance, we used Ariba to run the samples against the [VFDB](http://www.mgc.ac.cn/VFs/main.htm)
 
 ```{r}
 public50_vir <- get_virulence_results(public50$sample_id)
@@ -416,14 +418,14 @@ head(public50_cgmlst_matrix)
 
 The column and row names are the sample_ids.  The values are the Hamming distances between the two cgMLST patterns.
 
-## Rapid core genome trees (Unfinsihed)
+## Rapid core genome trees (Unfinished)
 
 ```{r}
 public50_var_genes <- get_variant_gene_sequence(sample_ids = public50$sample_id[1:10], annotation_ids = c(2,3,4))
 ```
 
 
-## Quality control assertions (Unfinsihed)
+## Quality control assertions (Unfinished)
 
 The Staphopia database and R package are being tweaked frequently.  If any of these assertions returns false it means that there may have been some subtle changes that may affect the results in the tutorial.
 
