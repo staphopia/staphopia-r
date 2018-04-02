@@ -6,6 +6,10 @@ output:
     theme: united
 ---
 
+## About the tutorial
+
+The goal of the tutorial is to preview most of current functions and comment a little on the output.  The basic approach is formulate a query to pull data from the Staphopia API using one of the ```get_``` functions.  The resulting data frame can be processed using various local functions.  Some examamples of downstream processing are described.  The underlying philosophy is to provide, as much as possible, the raw output of many of the prediction programs in the Staphopia pipeline.  This allows to the user to play around with paraemters to customize calling of results. 
+
 ## Prerequisites
 
 Install staphopia-r and test as described [here](https://github.com/staphopia/staphopia-r). You may choose to create a token for the staphopia API but the tutorial below is restricted to a small number of samples that can be accessed without an account.
@@ -19,7 +23,7 @@ library(ggplot2)
 library(Biostrings)
 library(phangorn) # check still use
 library(purrr) # check still use
-library(ape) # check still use
+library(ape) 
 library(assertthat)
 ```
 
@@ -34,7 +38,7 @@ tags <- get_all_tags()
 head(tags)
 ```
 
-The result is a list of tag names and matching tag_id.  These are mainly ENA/NCBI project acccessions or PubMed IDs (PMIDs) of publications.  The top results are lists of projects, which have "Gold" standard quality, are avaialble to the public, published and each coming from a different sequence type (ST).   These are test set open to the public without requiring a logon and token.  The '-20', '-50' etc mean 20 and 50 samples, respectively.
+The result is a list of tag names and matching tag_id.  These are mostly ENA/NCBI project acccessions or PubMed IDs (PMIDs) of publications but tags are a way of collecting samples together based on other criteria.  The top results from ```get_samples_by_tag``` are lists of projects that have "Gold" standard quality, are avaialble to the public, published with each coming from a different sequence type (ST).   These are test set open to the public without requiring a logon and token.  The '-20', '-50' etc mean 20 and 50 samples, respectively.
 
 These samples can be accessed by ```get_samples_by_tag```.
 ```{r}
@@ -47,31 +51,42 @@ The six columns are the internal staphopia sample_id; the name (generally, NCBI 
 There are alternative methods to get lists of samples - see the *staphopia-r* documentation. Some examples are: ```get_public_samples```, which returns all public sampes and  ```get_samples_by_name```, which searches sample names by a text string. These generally require a staphopia account/token.  Pulling large numbers of samples can slow down analysis.
 
 
-## Exploring SNPs and Indels (unfinished)
+## Exploring SNPs and Indels 
+
+Coming soon is an annotation table with links N315 gene name with its own annotation_id linked to the more global 'product_id' - see [Genes and Contigs].  The table will also have the N315 coordinates.
 
 ```{r}
-#get_annotation_table()
+#get_annotation_table()  TODO
+```
+
+Get all SNPs in the samples associated with annotation_id 17
+```{r}
+public50_snp_range <- get_snps(public50$sample_id, annotation_id = 17)
+head(public50_snp_range)
+```
+
+Each SNP has its own ID (based on position).  The columns including and after "AC" are quality metrics specific for this program.  "reference_id" is an internal ID that, in this case, means that the N315 chromosome was used.  All positions are based on the N315 chromosome, in this case. 
+
+You can also extract snps based on a range of positions in the N315 sequence
+
+```{r}
+get_snps(public50$sample_id, start = 20800, end = 21000)
 ```
 
 
-Based on N315 reference genome coordinates.
 
+You can perform the query in reverse and pull samples that have a particular SNP
 ```{r}
-#public50_snp_range <- get_snps_in_bulk()
+get_samples_by_snp(62405)
+
 ```
 
-look at one specific SNP
-```{r}
- #<- get_samples_by_snp()
-#pub_sam %>% filter(sample_id %in% )
-```
-
-You can get counts of SNPs across the global set at annotation_id 17
+You can get counts of SNPs across the global set at a particular annotation_id or range, in this case annotation_id = 17
 ```{r}
 ann17_snps <- get_variant_count_by_position(ids = 17, is_annotation = TRUE)
 head(ann17_snps)
 ```
-The tables summarizes the number of synonymous and nonsynonymous SNPs at each position and number of times the posiiotn was covered by an indel.
+The tables summarizes the number of synonymous and nonsynonymous SNPs at each position and number of times the position was covered by an indel.
 
 barplot
 ```{r}
@@ -85,7 +100,7 @@ Get indels for a given sample
 indels23942 <- get_indels(public50$sample_id[1])
 head(indels23942)
 ```
-These indels were called using the GATC program.   Each indel at a given posiiotn tat inserts of deletes a certain of bases is given a unique id. The columns including and after "AC" are quality metrics specific for this program.  "reference_id" is an internal ID that, in this case, means that the N315 chromosome was used.  
+These indels were called using the GATC program.   Each indel at a given position inserts or deletes a certain of bases is given a unique id. 
 
 Another way of running this query is to look for all indels in a particular annotation_id across a set of samples.
 
@@ -101,9 +116,9 @@ get_samples_by_indel(549)
 ```
 
 
-## Genes and contigs (unfinished)
+## Genes and contigs 
 
-Genes are predicted on de novo assembled contigs using PROKKA. Each annotated function is associated with a 'product_id'.  ```get_gene_products`` pulls a list of all products.  
+Genes are predicted on de novo assembled contigs using PROKKA. Each annotated function is associated with a 'product_id'.  ```get_gene_products``` pulls a list of all products.  
 ```{r}
 gp <- get_gene_products()
 head(gp)
@@ -144,8 +159,19 @@ njtree <- nj(dm)
 plot(njtree,show.tip.label = T, cex = 0.5, type = 'unrooted')
 ```
 
+You can use ```get_genes`` to pull all the gene locations for a sample.  This can be used to pull out individual contigs by filtering the data frame.  For example, from the data frame above ("public50_mecA_genes"), we can see that on sample 459, mecA is on contig 7.
 
-```get_assembly_contigs`` returns a list of the raw de novo assembled contig data for either assemblies marker as "plasmids" by SPAdes or not.  Columns give basic information and sequence as raw text.  Only contigs > 200 bp were from the de novo are stored in the database.  The header is the description in the fasta file if downloaded.  The first part is the <sample_id>|<ENA accession>|<contig number>  The contig number starts at 1 and counts up for each sample.
+```{r}
+sample459_contig7 <- get_genes(sample_id = 459) %>%
+  filter(contig == 7)
+sample459_contig7
+```
+
+There are 138 features (CDS, mRNA etc) on this contig.
+
+*<TODO - genoplotr graph>*
+
+```get_assembly_contigs``` returns a list of the raw de novo assembled contig data for either assemblies marker as "plasmids" by SPAdes or not.  Columns give basic information and sequence as raw text.  Only contigs > 200 bp were from the de novo are stored in the database.  The header is the description in the fasta file if downloaded.  The first part is the <sample_id>|<ENA accession>|<contig number>  The contig number starts at 1 and counts up for each sample.
 
 ```{r}
 contigs450 <- get_assembly_contigs(public50$sample_id[2], plasmids = F)
@@ -153,21 +179,14 @@ contigs450_plasmids <- get_assembly_contigs(public50$sample_id[2], plasmids = T)
 head(contigs450)
 ```
 
-<TODO - get_contig>
-```{r}
-get_contig()
-```
-
-
-
-
 ## Writing sequence data to hard drive
-There are 3 functions for writing contigs, plasmid contigs and proteins, respectively from a project to a local fasta_file. These are ```write_contigs_to_fasta```, ```write_plasmids_to_fasta``` and ```write_proteins_to_fasta```.  They all work the same way, with a default of the current locl directory as the apth to download. 
+
+There are 3 functions for writing contigs, plasmid contigs and proteins, respectively from a project to a local fasta_file. These are ```write_assembly```, ```write_genes``` and ```write_proteins```.  They all work the same way, with a default of the current local directory as the path to download. ```write_assembly``` allows filtering by minimum coverage and selection of whether plasmids or non-plasmids are downloaded. The following commands write out the data from sample_id 440.
 
 ```{r}
-write_contigs_to_fasta(450)
-write_plasmids_to_fasta(450)
-write_proteins_to_fasta(450)
+write_assembly(public50$sample_id[2], coverage = 2, plasmids = F)
+write_genes(public50$sample_id[2])
+write_proteins(public50$sample_id[2])
 ```
 
 The section above ("Genes and Contigs") illustrated an alternative approach, where sets of DNA contigs, genes and proteins can be used to create a DNAStringSet, which could then be saved using the ```writeXStringSet``` function.
@@ -181,19 +200,24 @@ public50_meta <- get_metadata(public50$sample_id)
 head(public50_meta)
 ```
 
-*< TODO - pull pubmed id by samples >*
+If you want to get more information about the publications that samples are linked to, these can be investigated by ```get_publications``` and ```get_citations```.  Note in same cases the link betwen sample_id and publicaiotn has been made through an BioProject accession number.  In these cases the sample_id may have been part of a larger set and not discussed individually in that publication.  
+
+```{r}
+get_publications(public50$sample_id[1:10]) 
+get_citations(26969225)
+```
+
 
 ## Genome assembly and sequence quality
 
 Stats on the sequence quality of the samples at different stages of procesing are avialble using ```get_sequence_quality```.
 
-
 ```{r}
 public50_qual <- get_sequence_quality(public50$sample_id)
 head(public50_qual)
 ```
- For each project there should be 4 rows, representing the original data (downloaded from ENA), then after the adapter removal, after error correction by SPAdes (ecc) and then after the final cleanup to remove any short and/or low quality reads. 
 
+For each project there should be 4 rows, representing the original data (downloaded from ENA), then after the adapter removal, after error correction by SPAdes (ecc) and then after the final cleanup to remove any short and/or low quality reads. 
 
 You can get a snapshot of the assembly metrics for each sample using ```get_assembly_stats```.
 
@@ -217,8 +241,7 @@ nrow(contigs4065_filtered)
 sum(contigs4065_filtered$length)
 ```
 
-
-## Antibiotic resistance (unfinished)
+## Antibiotic resistance 
 
 Can get more information about the data underlying these calls through ```get_resistance_results```.
 ```{r}
@@ -262,9 +285,9 @@ Visualization of number of samples with each beta lactam resistance mechanism
 barplot(table(public50_bla$mechanism), cex.names= 0.8)
 ```
 
-## SCCmec (unfinished)
+## SCCmec 
 
-This section is a test for storing BLASTN, TBLASTN and reference mapped sequences toward examing specific features of *S. aureus* genetics.  In this case, the SCCmec mobile cassettes  responsible for MRSA.
+SCCmec  is a test for storing BLASTN and TBLASTN resuls toward examing specific features of *S. aureus* genetics.  In this case, the SCCmec mobile cassettes  responsible for MRSA.  We have a preliminary set of tables from BLAST typing primers and protiens.
 
 ### SCCmec background
 
@@ -294,7 +317,8 @@ public50_sccmec <- get_sccmec_type(public50$sample_id)
 head(public50_sccmec)
 ```
 
-The table shows whether the sample was typed as SCCmec I-XI and a 'mecA' column additionally reports whether specifically the mecA gene primers matched, as would be expected for a MRSA strain.  There are some problems with the summary.  Some MRSA+ strains dont have a SCCmec type and some samples have multiple MRSA types.
+This is a work in progress.  We are not attempting to type classes X-XIII currently. The table shows whether the sample was typed as SCCmec I-IX and a 'mecA' column additionally reports whether specifically the mecA gene primers matched, as would be expected for a MRSA strain.  You can see that some MRSA+ strains dont have a SCCmec type and some samples have multiple MRSA types.
+
 
 ```{r}
 n <- rowSums(public50_sccmec[,2:10])
@@ -302,24 +326,70 @@ public50_sccmec$n <- n
 public50_sccmec %>% select(sample_id,meca,n)
 ```
 
+This typing is based only on the primer BLAST results at hte moment.  Using the ```get_sccmec_primer_hits()``` function we can get a look at which primers were found in each sample.
 
-< to be continued>
+```{r}
+public50_sccmec_primers <- get_sccmec_primer_hits(public50$sample_id)
+head(public50_sccmec_primers)
+```
+One useful metric to gauge the strength of the hit is Hamming distance - the number of changes between the query primer and the match.  A violin plot gives a look at the distribution of the those values across the sample.  This could be used to hel setting cutoffs.
 
+```{r}
+sccmec_pplot2 <- ggplot(public50_sccmec_primers, aes(x=title, y=hamming_distance)) + geom_violin() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+sccmec_pplot2
+```
 
-We can use Staphopia, to get the BLAST hits associated with the primers to determine the SCCmec type (if applicable) for each of our demo samples. Using the ```get_sccmec_primer_hits()``` function we can get a look at which primers were found in each sample.
+Its also useful to look at the protein tBLAST hits.  In this output, a new field called "shorter"" is created with an abbreviated protein name.
 
+```{r}
+public50_sccmec_proteins <- get_sccmec_protein_hits(public50$sample_id) %>%
+  mutate(shorter = gsub("\\|UniRef.+"," ",title)) 
+head(public50_sccmec_proteins)
+```
 
-## Virulence genes (unfinished)
+You canmake make a summary of the likely strong hits (in this case, mismatch + gaps less than 20 and plot)
 
-Similar to resistance, we used Ariba to run te samples against the [VFDB](http://www.mgc.ac.cn/VFs/main.htm)
+```{r}
+public50_sccmec_proteins_filtered <- public50_sccmec_proteins %>%
+  filter(mismatch + gaps < 40)
+sccmec_pplot <- ggplot(public50_sccmec_proteins_filtered, aes(x=shorter)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+sccmec_pplot
+```
+
+## Virulence genes 
+
+Similar to resistance, we used Ariba to run the samples against the [VFDB](http://www.mgc.ac.cn/VFs/main.htm)
 
 ```{r}
 public50_vir <- get_virulence_results(public50$sample_id)
 head(public50_vir)
 ```
 
+Summarize and plot
 
-## Rapid core genome trees
+```{r}
+public50_vir_summ <- public50_vir %>%
+  select(sample_id,cluster_name) %>%
+  unique()
+```
+
+```{r}
+table(public50_vir_summ$cluster_name)
+```
+This shows that many hits are core and present in all 50 samples (although not nescessarily functional in the case of the cap locus genes for example)
+
+```{r}
+variable_vir_genes <- names(table(public50_vir_summ$cluster_name))[table(public50_vir_summ$cluster_name) < 50]
+public50_vir_summ_var <- public50_vir_summ %>%
+  filter(cluster_name %in% variable_vir_genes)
+```
+
+
+```{r}
+virplot <- ggplot(public50_vir_summ_var, aes(x=cluster_name)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+virplot
+```
+
 
 ## MLST and cgMLST
 
@@ -346,10 +416,16 @@ public50_cgmlst_matrix <- cgmlst_distance(public50_cgmlst[1:10,])
 head(public50_cgmlst_matrix)
 ```
 
-The column and row names are the sample_ids.  The values are the number Hamming distance.
+The column and row names are the sample_ids.  The values are the Hamming distances between the two cgMLST patterns.
+
+## Rapid core genome trees (Unfinished)
+
+```{r}
+public50_var_genes <- get_variant_gene_sequence(sample_ids = public50$sample_id[1:10], annotation_ids = c(2,3,4))
+```
 
 
-## Quality control assertions
+## Quality control assertions (Unfinished)
 
 The Staphopia database and R package are being tweaked frequently.  If any of these assertions returns false it means that there may have been some subtle changes that may affect the results in the tutorial.
 
