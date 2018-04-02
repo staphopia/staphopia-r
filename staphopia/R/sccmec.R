@@ -119,3 +119,27 @@ get_sccmec_protein_hits <- function(sample_id, exact_hits=FALSE, predict=FALSE) 
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
 }
+
+#' get_sccmec_cassette_coverages
+#'
+#' Retrieve SCCmec Protein hits for a given sample(s).
+#'
+#' @param sample_id An integer sample ID, or vector of sample IDs
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_sccmec_cassette_coverages(500)
+#' get_sccmec_cassette_coverages(c(500, 1000, 1500))
+get_sccmec_cassette_coverages <- function(sample_id) {
+    if (is_single_id(sample_id)) {
+        request <- paste0('/sample/', format_id(sample_id), '/sccmec_coverages/')
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(sample_id)) {
+        request <- paste0('/sccmec/coverage/bulk_by_sample/')
+        return(submit_post_request(request, format_id(sample_id), chunk_size=500))
+    } else {
+        warning('sample_id is not the expected type (integer(s) or double(s))')
+    }
+}
