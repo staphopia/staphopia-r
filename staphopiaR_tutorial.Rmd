@@ -6,6 +6,14 @@ output:
     theme: united
 ---
 
+OPening block for development - delete later
+```{r}
+library(devtools)
+install_github("staphopia/staphopia-r/staphopia", ref = "upgrade")
+```
+
+
+
 ## About the tutorial
 
 The goal of the tutorial is to preview most of current functions and comment a little on the output.  The basic approach is formulate a query to pull data from the Staphopia API using one of the ```get_``` functions.  The resulting data frame can be processed using various local functions.  Some examamples of downstream processing are described.  The underlying philosophy is to provide, as much as possible, the raw output of many of the prediction programs in the Staphopia pipeline.  This allows to the user to play around with paraemters to customize calling of results. 
@@ -21,8 +29,6 @@ library(staphopia)
 library(dplyr)
 library(ggplot2)
 library(Biostrings)
-library(phangorn) # check still use
-library(purrr) # check still use
 library(ape) 
 library(assertthat)
 ```
@@ -264,7 +270,7 @@ This dataframe is the tet clusters types across the strains.
 ```{r}
 barplot(table(public50_tet$cluster))
 ```
- Note that tet38 is a conserved chromosomal gene, so is present in all strains and thus 
+ Note that tet38 is a conserved chromosomal gene, so is present in all strains and thus not useful as an indicator of tetracycline resistance in a sample by its presenece alone.
 
 
 
@@ -335,15 +341,14 @@ head(public50_sccmec_primers)
 One useful metric to gauge the strength of the hit is Hamming distance - the number of changes between the query primer and the match.  A violin plot gives a look at the distribution of the those values across the sample.  This could be used to hel setting cutoffs.
 
 ```{r}
-sccmec_pplot2 <- ggplot(public50_sccmec_primers, aes(x=title, y=hamming_distance)) + geom_violin() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+sccmec_pplot2 <- ggplot(public50_sccmec_primers, aes(x=target, y=hamming_distance)) + geom_violin() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
 sccmec_pplot2
 ```
 
-Its also useful to look at the protein tBLAST hits.  In this output, a new field called "shorter"" is created with an abbreviated protein name.
+Its also useful to look at the protein tBLAST hits.  
 
 ```{r}
-public50_sccmec_proteins <- get_sccmec_protein_hits(public50$sample_id) %>%
-  mutate(shorter = gsub("\\|UniRef.+"," ",title)) 
+public50_sccmec_proteins <- get_sccmec_protein_hits(public50$sample_id) 
 head(public50_sccmec_proteins)
 ```
 
@@ -352,9 +357,11 @@ You canmake make a summary of the likely strong hits (in this case, mismatch + g
 ```{r}
 public50_sccmec_proteins_filtered <- public50_sccmec_proteins %>%
   filter(mismatch + gaps < 40)
-sccmec_pplot <- ggplot(public50_sccmec_proteins_filtered, aes(x=shorter)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+sccmec_pplot <- ggplot(public50_sccmec_proteins_filtered, aes(x=target)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
 sccmec_pplot
 ```
+
+TODO sccmec coverages
 
 ## Virulence genes 
 
