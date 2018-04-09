@@ -8,6 +8,7 @@ Description: More coming
 License: To Be Determined
 LazyData: TRUE
 Imports: 
+    devtools,
     data.table, 
     httr, 
     ggplot2, 

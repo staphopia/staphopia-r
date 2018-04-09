@@ -10,7 +10,7 @@ get_all_tags()
 Parsed JSON response.
 }
 \description{
-Retrieve all Tags in Staphopia.
+Retrieve all Tags owned by user and made public
 }
 \examples{
 get_all_tags()

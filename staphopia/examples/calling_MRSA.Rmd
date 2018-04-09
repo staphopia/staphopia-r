@@ -1,0 +1,68 @@
+---
+title: "Different ways to call MRSA in Staphopia"
+output: html_notebook
+---
+
+Comparing the different ways that a strain can be called MRSA.  These include:
+* Based on the precomputed resulting of the SCCmec typing set (based on Blast matches to assembled contigs)
+* Blast matches assembled contigs to mecA specific primers
+* Blast matches of assembled contigs to SCCmec proteins
+* mecA hits in ARIBA data (uses unassembled FASTQ as data)
+* Presence of mecA in annotated gene set
+
+
+```{r}
+library(staphopia)
+library(dplyr)
+library(ggplot2)
+library(feather)
+```
+
+switch to dev version.  ignore when the database is moved to new version.
+```{r}
+USE_DEV = TRUE
+```
+
+Get table of all public samples - takes a minute or so.  There are 43972 samples.
+```{r}
+ps <- get_public_samples()
+```
+
+Get all SCCmecprotein hits
+
+```{r}
+ps_sccmec_pro <- get_sccmec_protein_hits(ps$sample_id) %>%
+  mutate(shorter = gsub("\\|UniRef.+"," ",title)) %>%
+  select(sample_id,shorter,length:align_len)
+```
+
+
+```{r}
+max_score <- group_by(ps_sccmec_pro,shorter) %>%
+  summarise(maxscore = max(bitscore))
+```
+
+```{r}
+ps_sccmec_pro2 <- inner_join(ps_sccmec_pro,max_score, by = "shorter") %>%
+  mutate(BSR = bitscore/maxscore) %>%
+  filter(BSR > 0.95) %>%
+  filter(grepl("mec|ccr", shorter))
+```
+
+```{r}
+vp <- ggplot(ps_sccmec_pro2, aes(x=shorter)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+```
+
+```{r}
+vp
+```
+
+```{r}
+write_feather(ps_sccmec_pro,"./ps_scc_pro.feather")
+```
+
+
+```{r}
+sessionInfo()
+```
+

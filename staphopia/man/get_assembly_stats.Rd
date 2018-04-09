@@ -4,12 +4,10 @@
 \alias{get_assembly_stats}
 \title{get_assembly_stats}
 \usage{
-get_assembly_stats(sample_id, scaffolds = FALSE, plasmids = FALSE)
+get_assembly_stats(sample_id, plasmids = FALSE)
 }
 \arguments{
 \item{sample_id}{An integer sample ID, or vector of sample IDs}
-
-\item{scaffolds}{Return scaffolds based stats. BOOL (Default FALSE)}
 
 \item{plasmids}{Return plasmid stats. BOOL (Default FALSE)}
 }
@@ -21,8 +19,6 @@ Retrieve all stats associated with an assembly for a given sample.
 }
 \examples{
 get_assembly_stats(500)
-get_assembly_stats(500, scaffolds=TRUE)
-get_assembly_stats(500, scaffolds=TRUE, plasmids=TRUE)
 get_assembly_stats(500, plasmids=TRUE)
 get_assembly_stats(c(500, 1000, 1500))
 }

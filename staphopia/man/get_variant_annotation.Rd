@@ -18,6 +18,6 @@ Parsed JSON response.
 Get annotation info associated with a variant.
 }
 \examples{
-get_variant_annotation(id=1903)
-get_variant_annotation(locus_tag="SA_RS09645")
+get_variant_annotation(7)
+get_variant_annotation(locus_tag="SA_RS00145")
 }

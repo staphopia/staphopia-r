@@ -4,7 +4,12 @@
 \alias{get_published_samples}
 \title{get_published_samples}
 \usage{
-get_published_samples()
+get_published_samples(include_location = FALSE, limit = FALSE)
+}
+\arguments{
+\item{include_location}{A boolean, includes location information with samples}
+
+\item{limit}{An integer, limit the number of samples returned}
 }
 \value{
 Parsed JSON response.
@@ -14,4 +19,5 @@ Retrieve published ENA samples.
 }
 \examples{
 get_published_samples()
+get_published_samples(limit=5)
 }

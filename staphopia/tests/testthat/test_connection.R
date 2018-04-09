@@ -1,4 +1,4 @@
-context("Testing API Connection")
+context(paste0("Testing API Connection To ", build_url('')))
 
 
 test_that("We can connect to the API.", {

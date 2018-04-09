@@ -19,6 +19,15 @@ Parsed JSON response.
 Given a list of Sample IDs and Annotation IDs return the SNP substituted
 gene sequences. Sequences are concatenated.
 }
+\details{
+PRECOMPUTE THESE, FLAG FOR KMER VALIDATED
+sample = [{
+  annotation_id: 1, genic only
+  sequence: ATGC,
+  kmer_valid: T or F
+}, {}
+]
+}
 \examples{
 get_variant_gene_sequence(c(5000, 5001, 5002), c(2, 3, 4))
 }

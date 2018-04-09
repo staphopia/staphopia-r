@@ -4,10 +4,12 @@
 \alias{get_indels}
 \title{get_indels}
 \usage{
-get_indels(sample_id)
+get_indels(sample_id, annotation_id = NULL)
 }
 \arguments{
 \item{sample_id}{An integer sample ID, or vector of sample IDs}
+
+\item{annotation_id}{Filter results based on an annotation ID}
 }
 \value{
 Parsed JSON response.

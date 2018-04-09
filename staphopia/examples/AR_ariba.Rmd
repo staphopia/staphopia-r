@@ -1,0 +1,137 @@
+---
+title: "Antibiotic Resistance based on ARIBA output"
+output: html_notebook
+---
+
+Ariba output was generated using the [MegaRes](https://megares.meglab.org) database for comparison.
+
+```{r}
+library(staphopia)
+library(dplyr)
+library(ggplot2)
+```
+
+switch to dev version.  ignore when the database is moved to new version.
+```{r}
+USE_DEV = TRUE
+```
+
+Get table of all public samples - takes a minute or so.  There are 43972 samples.
+```{r}
+ps <- get_public_samples()
+```
+
+Create a mega-table of all ARIBA output for every sample.
+```{r}
+start.time <- Sys.time()
+ariba_tab <- get_resistance_results(ps$sample_id)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
+```
+This is the raw [ARIBA report file output](https://github.com/sanger-pathogens/ariba/wiki/Task:-run)
+
+Becasue this file takes a while to load, I created a feather datafile for saving and fast reloading
+
+```{r}
+library(feather)
+write_feather(x = ariba_tab, path = "./ariba_tab.feather")
+```
+
+properties of this dataframe
+
+```{r}
+nrow(ariba_tab)
+select(ariba_tab,sample_id) %>% unique() %>% nrow()
+```
+
+
+### Tetracycline resistance
+
+```{r}
+tet <- filter(ariba_tab,class == 10) %>%
+  group_by(sample_id,cluster_name) %>%
+  summarise(tot_reads = sum(as.integer(reads)))
+  
+```
+
+exploratory dotplot of reads versus type.  Shows that some genes have very high variance - prob a feature of plasmid carriage
+
+```{r}
+bp <- ggplot(tet,aes(x=cluster_name,y=tot_reads)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + scale_y_log10()
+bp
+```
+
+Get a list of all strains with a least one hit, any coverage.  Can use this chunk to later play around with sensitivity by tweaking parameters.
+
+```{r}
+tet_hits <- select(tet,sample_id) %>%
+  unique() 
+```
+
+Merge with public samples and label
+
+```{r}
+tet_res <- ps %>%
+  select(sample_id,st) %>%
+  mutate(tetracycline = ifelse(sample_id %in% tet_hits$sample_id,"resistant","sensitive"))
+```
+
+Get top sequence types
+
+```{r}
+tst <- get_top_sequence_types()
+```
+
+Make summary of tet resistance
+
+```{r}
+tet_summary <- group_by(tet_res,st,tetracyline) %>%
+  summarise(count = sum(tetracycline))
+```
+
+
+## Beta Lactam resistance
+
+
+```{r}
+bla <- filter(ariba_tab,class == 13) %>%
+  group_by(sample_id,mechanism) %>%
+  summarise(tot_reads = sum(as.integer(reads)))
+  
+```
+
+Visualization
+
+
+```{r}
+bp2 <- ggplot(bla,aes(x=mechanism,y=tot_reads)) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + scale_y_log10()
+bp2
+```
+
+```{r}
+betalactamases_hits <- filter(bla,grepl("betalactam",mechanism)) %>%
+  select(sample_id) %>%
+  unique() 
+```
+
+```{r}
+pbp_hits <- filter(bla,grepl("Penicillin",mechanism)) %>%
+  select(sample_id) %>%
+  unique() 
+```
+
+### mecA specifically
+
+```{r}
+mecA_hits <- filter(ariba_tab,grepl("MEC[A|-]",cluster_name)) %>%
+  select(sample_id) %>%
+  unique() 
+```
+
+
+
+```{r}
+sessionInfo()
+```
+

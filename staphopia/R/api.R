@@ -11,16 +11,11 @@ TOKEN_MISSING <- paste0("Variable 'TOKEN' not found in ", TOKEN_FILE,
 #'
 #' @return Full URL endpoint.
 build_url <- function(request) {
-    if (Sys.info()['nodename'] == "merlin") {
-        USE_DEV = TRUE
-    } else if (!(exists("USE_DEV"))) {
-        USE_DEV = FALSE
-    }
-
-    if (USE_DEV == TRUE) {
-        base_url <- 'https://merlin.genetics.emory.edu/api'
-    } else {
-        base_url <- 'https://staphopia.emory.edu/api'
+    base_url <- 'https://staphopia.emory.edu/api'
+    if (exists("USE_DEV")) {
+        if (USE_DEV == TRUE) {
+            base_url <- 'https://chlamy.genetics.emory.edu/api'
+        }
     }
     return(paste0(base_url, request))
 }
@@ -103,7 +98,11 @@ submit_get_request <- function(request){
             }
 
             if (is.not.null(json_data$count)) {
-                return(json_data$results)
+                if (json_data$count == 0) {
+                    print(json_data$message)
+                } else {
+                    return(json_data$results)
+                }
             } else {
                 return(json_data)
             }
@@ -111,7 +110,6 @@ submit_get_request <- function(request){
     } else {
         warning(TOKEN_MISSING)
     }
-
 }
 
 #' submit_paginated_request
@@ -205,8 +203,6 @@ submit_post_request <- function(request, data, chunk_size=10, extra_data=FALSE,
     if (count == nrow(results)) {
         return(results)
     } else {
-        print(count)
-        print(nrow(results))
         return('Error! Count is not equal to number of rows!')
     }
 }

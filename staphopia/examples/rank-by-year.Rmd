@@ -1,0 +1,83 @@
+---
+title: "Public Sequencing Rank By Year"
+output:
+  pdf_document: default
+---
+
+This is a quick example on generating plots of the publicly available *Staphylococcus aureus* sequencing data by year.
+
+### Import Packages
+
+```{r}
+library(staphopia)
+library(ggplot2)
+library(reshape2)
+USE_DEV = TRUE
+```
+
+### Get Our Data
+We'll use the **get_rank_by_year()** function to do exactly that, retrieve submission counts by year.
+
+```{r}
+results <- get_rank_by_year()
+results
+```
+
+In the table above, there are seven columns:
+
+1. year: The year in which an experiment was made public in ENA/SRA
+2. bronze: The number of bronze ranked samples for a given year
+3. silver: The number of silver ranked samples for a given year
+4. gold: The number of gold ranked samples for a given year
+5. count: The number of submissions for a given year
+6. overall_bronze: The sum of bronze ranked samples of the previous years
+7. overall_silver: The sum of silver ranked samples of the previous years
+8. overall_gold: The sum of gold ranked samples of the previous years
+9. overall: The sum of each of the previous years
+
+### Plotting Our Data
+We'll use *ggplot2* to visualize our data. We'll look at the number of Bronze, Silver and Gold ranked samples of 
+
+#### Published vs Unpublished By Year
+For our final plot, we'll look at the number of samples that were referenced in a publication along side those that weren't. We'll need to melt the data in order to plot our groups.
+```{r fig.width=12, fig.asp=0.5}
+melted <- melt(results, id=c('year'),
+               measure.vars = c('bronze', 'silver', 'gold'))
+melted$title <- ifelse(melted$variable == 'gold', 'Gold', 
+                       ifelse(melted$variable == 'silver', 'Silver', 'Bronze'))
+melted$rank <- ifelse(melted$variable == 'gold', 3, 
+                      ifelse(melted$variable == 'silver', 2, 1))
+
+title <- substitute(paste("Sequencing ranks (Bronze = ", b, ", Silver = ", s,
+                          ", Gold = ", g, ") of publicly available ",
+                          italic('S. aureus')," samples between ", min_year,
+                          " and ", max_year, "."), list(
+    b=format(max(results$overall_bronze), big.mark=',', scientific=FALSE),
+    s=format(max(results$overall_silver), big.mark=',', scientific=FALSE),
+    g=format(max(results$overall_gold), big.mark=',', scientific=FALSE),
+    min_year=min(results$year),
+    max_year=max(results$year)
+))
+p <- ggplot(data=melted, aes(x=year, y=value, fill=title, group=rank, label=title)) +
+    xlab("Year") +
+    ylab("Sequencing Rank Per Year") +
+    ggtitle(title) +
+    geom_bar(stat='identity', position='dodge') +
+    geom_text(aes(label=value), vjust = -0.5, position = position_dodge(.9)) +
+    scale_fill_manual(values=c("#CD7F32", "#D4AF37", "#C0C0C0")) +
+    scale_x_continuous(breaks = round(seq(min(results$year), max(results$year), by = 1),1)) +
+    theme_bw() +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=14,face="bold"),
+          legend.title = element_blank())
+    
+
+p
+```
+
+
+
+```{r}
+sessionInfo()
+```
+

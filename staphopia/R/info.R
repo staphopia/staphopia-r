@@ -1,30 +1,3 @@
-#' get_assembly_stats_by_year
-#'
-#' Retrieve assembled stats by year based on when samples were first made public.
-#'
-#' @param is_scaffolds Boolean
-#' @param is_plasmids Boolean
-#'
-#' @return Parsed JSON response.
-#' @export
-#'
-#' @examples
-#' get_assembly_stats_by_year(is_scaffolds=TRUE, is_plasmids=FALSE)
-get_assembly_stats_by_year <- function(is_scaffolds=FALSE, is_plasmids=FALSE) {
-    request <- NULL
-    if (is_scaffolds && is_plasmids) {
-        request <- '/info/assembly_by_year/?is_plasmids&is_scaffolds'
-    } else if (is_scaffolds) {
-        request <- '/info/assembly_by_year/?is_scaffolds'
-    } else if (is_plasmids) {
-        request <- '/info/assembly_by_year/?is_plasmids'
-    } else {
-        request <- '/info/assembly_by_year/'
-    }
-
-    return(submit_get_request(request))
-}
-
 #' get_sequencing_stats_by_year
 #'
 #' Retrieve sequencing stats by year based on when samples were first made public.
@@ -47,6 +20,7 @@ get_sequencing_stats_by_year <- function(is_original=FALSE) {
     return(submit_get_request(request))
 }
 
+
 #' get_top_sequence_types
 #'
 #' Retrieve top X (default 10) sequence sequence types.
@@ -61,4 +35,71 @@ get_sequencing_stats_by_year <- function(is_original=FALSE) {
 get_top_sequence_types <- function(total=10) {
     request <- paste0('/top/', total, '/sequence_types/')
     return(submit_get_request(request))
+}
+
+
+#' get_submission_by_year
+#'
+#' Retrieve the public submissions by year.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_submission_by_year()
+get_submission_by_year <- function() {
+    return(submit_get_request('/info/submission_by_year/'))
+}
+
+#' get_rank_by_year
+#'
+#' Retrieve the rank (Gold Silver Bronze) of public submissions by year.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_rank_by_year()
+get_rank_by_year <- function() {
+    return(submit_get_request('/info/rank_by_year/'))
+}
+
+#' get_st_by_year
+#'
+#' Retrieve the sequence type assignments of public submissions by year.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_st_by_year()
+get_st_by_year <- function() {
+  return(submit_get_request('/info/st_by_year/'))
+}
+
+#' get_public_cgmlst_patterns
+#'
+#' Retrieve the cgMLST pattern counts for public samples.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_public_cgmlst_patterns()
+get_public_cgmlst_patterns <- function() {
+    return(submit_get_request('/info/cgmlst_patterns/'))
+}
+
+
+#' get_publication_links
+#'
+#' Retrieve counts for how public samples were linked to publications.
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_publication_links()
+get_publication_links <- function() {
+    return(submit_get_request('/info/publication_links/'))
 }

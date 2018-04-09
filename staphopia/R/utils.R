@@ -1,3 +1,15 @@
+#' get_resistance_results
+#'
+#' Retrieve resistances as reported by Ariba for a given sample.
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' test_staphopia()
+test_staphopia <- function() {
+    devtools::test()
+}
+
 #' format_id
 #'
 #' In case scientific notation is turned on, convert it to an integer. This
@@ -66,4 +78,26 @@ is_multiple_ids <- function(x) {
     } else {
         return(FALSE)
     }
+}
+
+#' write_plot
+#'
+#' A wrapper for to validate given vector is multiple ids and proper type. This
+#' function should not be directly used by the user.
+#'
+#' @param plot_object A ggplot object
+#' @param name Basename for the output PDF and PNG files
+#' @param height The PDF height of the output (Default: 5)
+#' @param width The PDF width of the object (Default: 12)
+#'
+#' @export
+#' @return bool TRUE is multiple ids else FALSE.
+write_plot <- function(plot_object, name, height = 5, width = 12) {
+    pdf(paste0(name, ".pdf"), width=width, height=height)
+    print(plot_object)
+    dev_null <- dev.off()
+
+    png(paste0(name, ".png"), width=width*100, height=height*100)
+    print(plot_object)
+    dev_null <- dev.off()
 }
