@@ -4,6 +4,7 @@
 #'
 #' @param sample_id An integer sample ID or A vector of sample IDs
 #' @param product_id Optional integer product ID
+#' @param exclude_sequence Boolean, Do not return DNA and Amino Acid sequence
 #'
 #' @return Parsed JSON response.
 #' @export
@@ -12,12 +13,9 @@
 #' get_genes(500)
 #' get_genes(c(500, 501, 502)
 #' get_genes(c(500, 501), product_id=179)
-get_genes <- function(sample_id, product_id=FALSE) {
-    q <- ''
-    if (product_id) {
-        q <- paste0('?product_id=', product_id)
-    }
-
+get_genes <- function(sample_id, product_id=FALSE, exclude_sequence = FALSE) {
+    q = paste0('?', ifelse(product_id, paste0('product_id=', product_id), ''),
+               '&', ifelse(exclude_sequence, 'exclude_sequence', ''))
     if (is_single_id(sample_id)) {
         request <- paste0('/sample/', format_id(sample_id), '/genes/', q)
         return(submit_get_request(request))

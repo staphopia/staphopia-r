@@ -143,3 +143,55 @@ get_sccmec_cassette_coverages <- function(sample_id) {
         warning('sample_id is not the expected type (integer(s) or double(s))')
     }
 }
+
+
+#' get_sccmec_ariba
+#'
+#' Retrieve SCCmec related results as reported by Ariba for a given sample.
+#'
+#' @param sample_id An integer sample ID, or vector of sample IDs
+#' @param summary A boolean to return a summary of the ariba results
+#' @param resistance_report A boolean to return a resistance report based on Ariba summary
+#' @param cluster_report A boolean to return a cluster report based on Ariba summary
+#' @param include_all Return all return summary results whether or not a match exists
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_sccmec_ariba(500)
+#' get_sccmec_ariba(c(500, 1000, 1500))
+get_sccmec_ariba <- function(sample_id, summary=FALSE, resistance_report=FALSE, cluster_report=FALSE, include_all=FALSE) {
+    q = paste0('?mec_only&', ifelse(summary, 'summary', ''),
+               '&', ifelse(resistance_report, 'report', ''),
+               '&', ifelse(cluster_report, 'cluster_report', ''),
+               '&', ifelse(include_all, 'include_all', ''))
+
+    if (is_single_id(sample_id)) {
+        request <- paste0('/sample/', format_id(sample_id), '/resistance/', q)
+        return(submit_get_request(request))
+    } else if (is_multiple_ids(sample_id)) {
+        request <- paste0('/resistance/ariba/bulk_by_sample/', q)
+        return(submit_post_request(request, sample_id, chunk_size=1000))
+    } else {
+        warning('sample_id is not the expected type (integer(s) or double(s))')
+    }
+}
+
+
+#' get_sccmec_annotation
+#'
+#' Retrieve SCCmec related results as predicted by PROKKA.
+#'
+#' @param sample_id An integer sample ID, or vector of sample IDs
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_sccmec_annotation(500)
+#' get_sccmec_annotation(c(500, 1000, 1500))
+get_sccmec_annotation <- function(sample_id, exclude_sequence=FALSE) {
+    mec_product <- staphopia::get_gene_products(query='YP_005743439.1')
+    return(staphopia::get_genes(sample_id, product_id=mec_product$product_id, exclude_sequence=exclude_sequence))
+}

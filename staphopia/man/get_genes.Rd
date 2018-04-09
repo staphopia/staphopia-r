@@ -4,12 +4,14 @@
 \alias{get_genes}
 \title{get_genes}
 \usage{
-get_genes(sample_id, product_id = FALSE)
+get_genes(sample_id, product_id = FALSE, exclude_sequence = FALSE)
 }
 \arguments{
 \item{sample_id}{An integer sample ID or A vector of sample IDs}
 
 \item{product_id}{Optional integer product ID}
+
+\item{exclude_sequence}{Boolean, Do not return DNA and Amino Acid sequence}
 }
 \value{
 Parsed JSON response.
