@@ -6,10 +6,10 @@ output:
     theme: united
 ---
 
-OPening block for development - delete later
+If not already installed (note you many have to first install the Biostrings package - see [here](https://bioconductor.org/packages/release/bioc/html/Biostrings.html) how to do this).
 ```{r}
 library(devtools)
-install_github("staphopia/staphopia-r/staphopia", ref = "upgrade")
+install_github("staphopia/staphopia-r/staphopia")
 ```
 
 
