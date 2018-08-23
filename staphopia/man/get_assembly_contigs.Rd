@@ -4,7 +4,8 @@
 \alias{get_assembly_contigs}
 \title{get_assembly_contigs}
 \usage{
-get_assembly_contigs(sample_id, plasmids = FALSE, contig = FALSE)
+get_assembly_contigs(sample_id, plasmids = FALSE, contig = FALSE,
+  exclude_sequence = FALSE)
 }
 \arguments{
 \item{sample_id}{An integer sample ID}
@@ -12,6 +13,8 @@ get_assembly_contigs(sample_id, plasmids = FALSE, contig = FALSE)
 \item{plasmids}{Return plasmid stats. BOOL (Default FALSE)}
 
 \item{contig}{An integer representing a single contig (used by get_genes())}
+
+\item{exclude_sequence}{Boolean, Do not return DNA sequence}
 }
 \value{
 Parsed JSON response.

@@ -4,7 +4,10 @@
 \alias{get_submission_by_year}
 \title{get_submission_by_year}
 \usage{
-get_submission_by_year()
+get_submission_by_year(all = FALSE)
+}
+\arguments{
+\item{all}{Boolean, include all available sample, not just the processed ones}
 }
 \value{
 Parsed JSON response.

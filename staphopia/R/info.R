@@ -42,13 +42,22 @@ get_top_sequence_types <- function(total=10) {
 #'
 #' Retrieve the public submissions by year.
 #'
+#' @param all Boolean, include all available sample, not just the processed ones
+#'
 #' @return Parsed JSON response.
 #' @export
 #'
 #' @examples
 #' get_submission_by_year()
-get_submission_by_year <- function() {
-    return(submit_get_request('/info/submission_by_year/'))
+get_submission_by_year <- function(all = FALSE) {
+    request <- NULL
+    if (all) {
+        request <- '/info/submission_by_year/?all'
+    } else {
+        request <- '/info/submission_by_year/'
+    }
+
+    return(submit_get_request(request))
 }
 
 #' get_rank_by_year
