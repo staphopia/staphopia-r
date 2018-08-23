@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/59863793.svg)](https://zenodo.org/badge/latestdoi/59863793)
+
 # staphopia-r
 A R library to extract data from the [Staphopia](https://staphopia.emory.edu) API
 
