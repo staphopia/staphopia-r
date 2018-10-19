@@ -63,6 +63,27 @@ get_snps <- function(sample_id, annotation_id=NULL, start=NULL, end=NULL) {
 }
 
 
+#' get_snp_by_position
+#'
+#' Retrieve all SNP IDs for a given reference position.
+#'
+#' @param position An integer reference position
+#'
+#' @return Parsed JSON response.
+#' @export
+#'
+#' @examples
+#' get_snp_by_position(500)
+get_snp_by_position <- function(position) {
+    if (is_single_id(position)) {
+        request <- paste0('/variant/snp/?reference_position=', format_id(position))
+        return(submit_get_request(request))
+    } else {
+        warning('position is not the expected type (integer(s) or double(s))')
+    }
+}
+
+
 #' get_variant_annotation
 #'
 #' Get annotation info associated with a variant.
