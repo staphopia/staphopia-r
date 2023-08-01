@@ -1,7 +1,12 @@
 [![DOI](https://zenodo.org/badge/59863793.svg)](https://zenodo.org/badge/latestdoi/59863793)
 
+# As of August 31st, 2023 the Staphopia API has reached end-of-life
+
+If your research was affected by this shut down, please reach out to Tim Read and/or Robert Petit.
+
+
 # staphopia-r
-A R library to extract data from the [Staphopia](https://staphopia.emory.edu) API
+A R library to extract data from the Staphopia API
 
 ## Installation
 
@@ -23,10 +28,6 @@ Install and test staphopia-r from github (running the test might take 1-2 min)
   library("staphopia")
   test_staphopia()
   ```
-  
- ## Create user_name and get authenication token
-  
- See https://staphopia.emory.edu/docs/api/#authentication
 
 ### On Mac/ Linux
 
